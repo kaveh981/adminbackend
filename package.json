@@ -1,0 +1,33 @@
+{
+  "name": "mgmb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+   "scripts": {
+    "compile": "tsc --declaration && node build/bootstrap.js",
+    "dev": "nodemon -e ts  --exec \"npm run compile\"",
+    "start": "nodemon build/bootstrap.js",
+    "test": "tsc --declaration && node build/test/index.js",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/kaveh981/mgmb.git"
+  },
+  "author": "Kaveh Fereidouni",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/kaveh981/mgmb#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.16.5",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "inversify": "^4.3.0",
+    "inversify-express-utils": "^4.0.1",
+    "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1",
+    "typescript": "^2.5.3"
+  }
+}
