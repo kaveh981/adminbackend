@@ -4,12 +4,7 @@
   "description": "",
   "main": "index.js",
    "scripts": {
-    "compile": "tsc --declaration && node build/bootstrap.js",
-    "dev": "nodemon -e ts  --exec \"npm run compile\"",
-    "start": "nodemon build/bootstrap.js",
-    "test": "tsc --declaration && node build/test/index.js",
-    "tsc": "tsc",
-    "tsc:w": "tsc -w"
+
   },
   "repository": {
     "type": "git",
