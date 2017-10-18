@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-   "scripts": {
-
+  "scripts": {
+    "compile": "tsc --declaration && node build/bootstrap.js",
+    "dev": "nodemon -e ts  --exec \"npm run compile\"",
+    "start": "nodemon build/bootstrap.js"
   },
   "repository": {
     "type": "git",
