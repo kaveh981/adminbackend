@@ -17,11 +17,14 @@
   "homepage": "https://bitbucket.org/kaveh981/mgmb#readme",
   "dependencies": {
     "@types/body-parser": "^1.16.5",
+    "@types/node": "^8.0.44",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "inversify": "^4.3.0",
     "inversify-express-utils": "^4.0.1",
-    "reflect-metadata": "^0.1.10"
+    "mysql": "^2.15.0",
+    "reflect-metadata": "^0.1.10",
+    "typeorm": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^1.12.1",
