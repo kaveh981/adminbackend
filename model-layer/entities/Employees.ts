@@ -1,12 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne,ManyToMany, JoinColumn } from "typeorm";
 import { Users } from "./Users";
-import {EmployeeRoles} from './EmployeeRoles';
+import {Roles} from './Roles';
 
 @Entity()
 export class Employees {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    employeeId: number;
 
     @Column()
     email: string;
@@ -15,6 +15,6 @@ export class Employees {
     @JoinColumn()
     user: Users;
 
-    @ManyToMany(type => EmployeeRoles, employeeRole => employeeRole.roles)
-    employees: Employees[];
+    @ManyToMany(type => Roles, role => role.employees)
+    employeesRoles: Roles[];
 }

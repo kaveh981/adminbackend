@@ -10,7 +10,7 @@ export class Users {
     @Column()
     name: string;
 
-    @Column({ unique: true })
+    @Column()
     family: string;
 
     @OneToOne(type => Employees, employee => employee.user)
