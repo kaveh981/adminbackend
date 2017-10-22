@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, OneToMan
 import { Employees } from './Employees';
 import { Menus } from './Menus';
 @Entity()
-export class EmployeeRoles {
+export class Roles {
 
     @PrimaryGeneratedColumn()
     roleId: number;
@@ -10,9 +10,11 @@ export class EmployeeRoles {
     @Column()
     role: string;
 
-    @ManyToMany(type => Employees, employee => employee.employees)
-    roles: EmployeeRoles[];
+    @ManyToMany(type => Employees, employee => employee.employeesRoles)
+    @JoinTable()
+    employees: Employees[];
 
     @OneToMany(type => Menus, menu => menu.role)
     menus: Menus[];
+
 }

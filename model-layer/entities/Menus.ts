@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, OneToMany, JoinTable } from "typeorm";
-import { EmployeeRoles } from './EmployeeRoles';
+import { Roles } from './Roles';
 
 @Entity()
 export class Menus {
@@ -10,12 +10,12 @@ export class Menus {
     @Column()
     title: string;
 
-    @OneToMany(type => Menus, menu => menu.parentMenu)
+    @OneToMany(type => Menus, menu => menu.parent)
     subMenus: Menus[];
 
     @ManyToOne(type => Menus, menu => menu.subMenus)
-    parentMenu: Menus;
+    parent: Menus;
 
-    @ManyToOne(type => EmployeeRoles, employeeRole => employeeRole.menus)
-    role: EmployeeRoles;
+    @ManyToOne(type => Roles, role => role.menus)
+    role: Roles;
 }
