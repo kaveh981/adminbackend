@@ -6,7 +6,11 @@
   "scripts": {
     "compile": "tsc --declaration && node build/bootstrap.js",
     "dev": "nodemon -e ts  --exec \"npm run compile\"",
-    "start": "nodemon build/bootstrap.js"
+    "start": "nodemon build/bootstrap.js",
+    "test": "tsc --declaration && node build/test/index.js",
+    "mytest": "tsc --declaration && node build/test/test.js",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
   },
   "repository": {
     "type": "git",
@@ -19,11 +23,18 @@
     "@types/body-parser": "^1.16.5",
     "@types/node": "^8.0.44",
     "body-parser": "^1.18.2",
+    "deep-diff": "^0.3.8",
     "express": "^4.16.2",
+    "fs-finder": "^1.8.1",
     "inversify": "^4.3.0",
     "inversify-express-utils": "^4.0.1",
+    "keypress": "^0.2.1",
+    "knex": "^0.13.0",
     "mysql": "^2.15.0",
+    "pg": "^7.3.0",
     "reflect-metadata": "^0.1.10",
+    "request": "^2.83.0",
+    "tape": "^4.8.0",
     "typeorm": "^0.1.1"
   },
   "devDependencies": {

@@ -12,15 +12,15 @@ container.bind<IGenericRepository<any>>('GenericRepository').to(GenericRepositor
 container.bind<TestHandler>('TestHandler').to(TestHandler);
 container.bind<SuiteHandler>('SuiteHandler').to(SuiteHandler);
 
-container.bind<any>('KnexConfig').toConstantValue({
-    client: 'pg',
-    connection: {
-        host: "elmer-01.db.elephantsql.com",
-        user: "uxpahflz",
-        password: "jziJM4hw5FYqmnGIMA23IjT7yn0aELHq",
-        database: "uxpahflz"
-    }
-});
+// container.bind<any>('KnexConfig').toConstantValue({
+//     client: 'pg',
+//     connection: {
+//         host: "elmer-01.db.elephantsql.com",
+//         user: "uxpahflz",
+//         password: "jziJM4hw5FYqmnGIMA23IjT7yn0aELHq",
+//         database: "uxpahflz"
+//     }
+// });
 
 container.bind<any>('KnexMysqlConfig').toConstantValue({
     client: 'mysql',
