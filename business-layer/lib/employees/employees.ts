@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { injectable, inject } from 'inversify';
-import { Employees as Employee } from '../../../model-layer';
+import { Employees as Employee, Users as User } from '../../../model-layer';
 import { GenericRepository } from '../../../data-layer';
 import { IEmployees } from './employees.infc';
 
@@ -11,21 +11,19 @@ class Employees implements IEmployees {
 
     constructor( @inject('GenericRepository') private repo: GenericRepository<any>) { }
 
-    public async  addEmployee(employee: Employee): Promise<Employee> {
-        let result: Employee = await this.repo.save(employee);
+    public async  addEmployee(employee: User): Promise<User> {
+        let result: User = await this.repo.save(employee);
         return result;
     }
 
     public async  getEmployees(): Promise<Employee[]> {
-        let result: Employee[] = await this.repo.list(Employee);
+        let result: Employee[] = await this.repo.list(Employee, { relations: ['user'] });
         return result;
     }
 
     public async  findById(id: number): Promise<Employee> {
-        console.log("user business" + id);
         let result: Employee = await this.repo.getSingle(Employee, {
-            alias: "employees",
-            relations: ["users"],
+            relations: ["user"],
             where: {
                 "userUserId": id
             }
@@ -33,46 +31,38 @@ class Employees implements IEmployees {
         return result;
     }
 
-    public async  update(employee: Employee): Promise<Employee> {
-        let result: Employee = await this.repo.getSingle(Employee, {
-            alias: "employees",
-            relations: ["users"],
+    public async  update(user: User): Promise<User> {
+        let result: User = await this.repo.getSingle(User, {
+            relations: ["employee"],
             where: {
-                "userUserId": employee.user.userId
+                "userId": user.userId
             }
         });
-        result.email = employee.email;
-        result.user.family = employee.user.family;
-        result.user.name = employee.user.name;
-        await this.repo.save(result);
-        return result;
+        result.employee.email = user.employee.email;
+        result.family = user.family;
+        result.name = user.name;
+        let savedResult = await this.repo.save(result);
+        return savedResult;
     }
 
-    public async  removeById(id: number): Promise<Employee> {
-        console.log("user business" + id);
-        let result: Employee = await this.repo.getSingle(Employee, {
-            alias: "employees",
-            relations: ["users"],
+    public async  removeById(id: number): Promise<any> {
+        let user: User = await this.repo.getSingle(User, {
+            where: {
+                "userId": id
+            }
+        });
+        let employee: Employee = await this.repo.getSingle(Employee, {
             where: {
                 "userUserId": id
             }
         });
-        await this.repo.remove(result);
-        return result;
+        let emp = await this.repo.remove([employee, user]);
+        return 'deleted';
+
     }
 
-    public async findByUsername(username: string): Promise<Employee> {
-        let result: Employee = await this.repo.getSingle(Employee, {
-            alias: "employees",
-            relations: ["users"],
-            where: {
-                "email": username
-            }
-        });
-        return result;
-    }
 
 }
-export { Employee };
+export { Employees };
 
 
