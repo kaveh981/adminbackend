@@ -4,6 +4,8 @@ export type ObjectType<T> = { new (): T } | Function;
 
 interface IGenericRepository<T> {
 
+    init();
+
     list(type: ObjectType<T>, findOptions?: any): Promise<T[]>;
 
     getSingle(type: ObjectType<T>, id: any): Promise<T>;
