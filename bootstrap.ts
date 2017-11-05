@@ -13,6 +13,7 @@ server.setConfig((app) => {
     }));
     app.use(bodyParser.json());
 });
-
 let app = server.build();
-app.listen(3000);
+let port = 3000;
+app.listen(port);
+console.log(`Server started on port ${port} :)`);
