@@ -13,6 +13,10 @@ export class Users {
     @Column()
     family: string;
 
-    @OneToOne(type => Employees, employee => employee.user)
+    @OneToOne(type => Employees, employee => employee.user, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
+        cascadeRemove: true
+    })
     employee: Employees;
 }
