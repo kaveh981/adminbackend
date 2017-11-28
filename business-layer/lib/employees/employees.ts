@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { injectable, inject } from 'inversify';
-import { Employees as Employee, Users as User } from '../../../model-layer';
+import { Employees as Employee, Users as User, Roles as Role } from '../../../model-layer';
 import { GenericRepository } from '../../../data-layer';
 import { IEmployees } from './employees.infc';
 
@@ -59,6 +59,23 @@ class Employees implements IEmployees {
         let emp = await this.repo.remove([employee, user]);
         return 'deleted';
 
+    }
+
+    public async  addRoleToEmployee(employeeId: number, roleId: number): Promise<User> {
+        let employee: Employee = await this.repo.getSingle(Employee, {
+            where: {
+                "userUserId": employeeId
+            }
+        });
+        let role: Role = await this.repo.getSingle(Role, {
+            where: {
+                "roleId": roleId
+            }
+        });
+        employee.employeesRoles.push(role);
+        let savedResult = await this.repo.save(employee);
+
+        return savedResult;
     }
 
 
