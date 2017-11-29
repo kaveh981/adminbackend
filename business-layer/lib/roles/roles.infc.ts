@@ -7,7 +7,6 @@ interface IRoles {
     findById(id: number): Promise<Role>;
     update(role: Role): Promise<Role>;
     removeById(id: number): Promise<Role>;
-    findByUsername(role: string): Promise<Role>;
 }
 export { IRoles };
 
