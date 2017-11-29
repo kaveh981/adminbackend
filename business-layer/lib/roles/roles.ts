@@ -22,7 +22,6 @@ class Roles implements IRoles {
     }
 
     public async  findById(id: number): Promise<Role> {
-        console.log("user business" + id);
         let result: Role = await this.repo.getSingle(Role, {
             alias: "roles",
             where: {
@@ -34,7 +33,6 @@ class Roles implements IRoles {
 
     public async  update(role: Role): Promise<Role> {
         let result: Role = await this.repo.getSingle(Role, {
-            alias: "roles",
             where: {
                 "roleId": role.roleId
             }
@@ -45,28 +43,15 @@ class Roles implements IRoles {
     }
 
     public async  removeById(id: number): Promise<Role> {
-        console.log("user business" + id);
         let result: Role = await this.repo.getSingle(Role, {
-            alias: "roles",
             where: {
                 "roleId": id
             }
         });
-        await this.repo.remove(result);
+        await this.repo.remove([result]);
         return result;
     }
-
-    public async findByUsername(role: string): Promise<Role> {
-        let result: Role = await this.repo.getSingle(Role, {
-            alias: "roles",
-            where: {
-                "roel": role
-            }
-        });
-        return result;
-    }
-
 }
-export { Role };
+export { Roles };
 
 
