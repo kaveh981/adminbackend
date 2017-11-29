@@ -17,9 +17,10 @@ class Menus implements IMenus {
     }
 
     public async  getMainMenus(): Promise<Menu[]> {
+
         let result: Menu[] = await this.repo.list(Menu, {
             where: {
-                parentMenuId: 'IS NULL'
+                parentMenuId: null
             }
         });
         return result;
@@ -27,9 +28,9 @@ class Menus implements IMenus {
 
     public async  getSubMenusByParentId(id: number): Promise<Menu[]> {
         let result: Menu[] = await this.repo.list(Menu, {
-            relation: ['subMenus'],
+            relations: ['parent'],
             where: {
-                menuId: id
+                parentMenuId: id
             }
         });
         return result;
@@ -37,7 +38,6 @@ class Menus implements IMenus {
 
     public async  findById(id: number): Promise<Menu> {
         let result: Menu = await this.repo.getSingle(Menu, {
-            alias: "menus",
             where: {
                 "menuId": id
             }
@@ -46,27 +46,25 @@ class Menus implements IMenus {
     }
 
     public async  update(menu: Menu): Promise<Menu> {
+        
         let result: Menu = await this.repo.getSingle(Menu, {
-            alias: "menus",
             where: {
-                "menusId": menu.menuId
+                "menuId": menu.menuId
             }
         });
         result.title = menu.title;
-        
+
         await this.repo.save(result);
         return result;
     }
 
     public async  removeById(id: number): Promise<Menu> {
-        console.log("user business" + id);
         let result: Menu = await this.repo.getSingle(Menu, {
-            alias: "menus",
             where: {
-                "menusId": id
+                "menuId": id
             }
         });
-        await this.repo.remove(result);
+        await this.repo.remove([result]);
         return result;
     }
 
