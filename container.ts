@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Menus as Menu } from './model-layer';
+import { Users as User, Roles as Role, Employees as Employee, Menus as Menu ,Category} from './model-layer';
 import { IEmployees, Employees, IMenus, Menus, IRoles, Roles } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
-import { EmployeeController } from './lib/exporter';
+import { EmployeeController, RoleController, MenuController } from './lib/exporter';
 
 let container = new Container();
 
@@ -50,7 +50,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Menu
+            User, Role, Employee, Menu, Category
         ],
         synchronize: false
     }
@@ -71,6 +71,8 @@ container.bind<IMenus>('Menus').to(Menus);
 
 
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');
+container.bind<interfaces.Controller>(TYPE.Controller).to(RoleController).whenTargetNamed('RoleController');
+container.bind<interfaces.Controller>(TYPE.Controller).to(MenuController).whenTargetNamed('MenuController');
 
 container.get<IGenericRepository<any>>('GenericRepository').init();
 
