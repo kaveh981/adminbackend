@@ -1,5 +1,9 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn, JoinTable } from "typeorm";
-
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ManyToOne } from "typeorm";
+import { OneToMany } from "typeorm";
+import { OneToOne } from "typeorm";
+import { JoinColumn } from "typeorm";
+import { JoinTable } from "typeorm";
 
 @Entity("sample8_category")
 export class Category {
@@ -20,15 +24,14 @@ export class Category {
 
     @OneToOne(type => Category, category => category.oneCategory, {
         cascadeInsert: true,
-        cascadeUpdate: true,
-        
+        cascadeUpdate: true
     })
     oneInverseCategory: Category;
 
     @ManyToOne(type => Category, category => category.oneManyCategories, {
         cascadeInsert: true,
         cascadeUpdate: true,
-       
+        cascadeRemove: true
     })
     oneManyCategory: Category;
 

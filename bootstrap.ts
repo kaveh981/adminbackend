@@ -12,6 +12,13 @@ server.setConfig((app) => {
         extended: true
     }));
     app.use(bodyParser.json());
+
+     // this is to allow cors
+  app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 });
 let app = server.build();
 let port = 3000;
