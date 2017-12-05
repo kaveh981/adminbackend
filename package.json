@@ -23,6 +23,7 @@
   "homepage": "https://bitbucket.org/kaveh981/mgmb#readme",
   "dependencies": {
     "@types/body-parser": "^1.16.5",
+    "@types/express": "^4.0.39",
     "@types/node": "^8.0.44",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
