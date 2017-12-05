@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
 import { GenericRepository, IGenericRepository } from '../../data-layer';
 import { QueryBuilder, DataSetup, APIRequestHandler, DataPopulator, TestHandler, SuiteHandler } from './exporter';

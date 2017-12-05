@@ -31,7 +31,7 @@
     "deep-diff": "^0.3.8",
     "express": "^4.16.2",
     "fs-finder": "^1.8.1",
-    "inversify": "^4.3.0",
+    "inversify": "^4.5.2",
     "inversify-express-utils": "^4.0.1",
     "keypress": "^0.2.1",
     "knex": "^0.13.0",
