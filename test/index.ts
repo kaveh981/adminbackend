@@ -2,7 +2,7 @@
 
 /** npm test -- -d /employees  */
 /** node_modules */
-import 'reflect-metadata';
+// import 'reflect-metadata';
 import * as program from 'commander';
 import * as path from 'path';
 const keypress = require('keypress');

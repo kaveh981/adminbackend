@@ -1,4 +1,4 @@
-import "reflect-metadata";
+
 
 import { injectable, inject } from 'inversify';
 import { Menus as Menu } from '../../../model-layer';

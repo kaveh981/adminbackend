@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { Users as User, Roles as Role, Employees as Employee, Menus as Menu ,Category} from './model-layer';

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import * as bodyParser from 'body-parser';
 
 import { Container } from 'inversify';
