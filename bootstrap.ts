@@ -21,11 +21,15 @@ server.setConfig((app) => {
     next();
   });
 });
+
 console.log('new' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
 let app = server.build();
 let port: number = Number.parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
-let ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 app.listen(port, ip);
+app.get('/', function (req, res) {
+  res.send('Hello Kaveh!' + `, Server started on port ${port} and ip of ${ip} :)`);
+});
 console.log(`Server started on port ${port} and ip of ${ip} :)`);
 
 
