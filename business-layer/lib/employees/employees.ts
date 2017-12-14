@@ -56,8 +56,8 @@ class Employees implements IEmployees {
                 "userUserId": id
             }
         });
-        let emp = await this.repo.remove([employee, user]);
-        return 'deleted';
+        await this.repo.remove([employee, user]);
+        return { success: true, message: 'Employee deleted' };
 
     }
 
@@ -77,6 +77,24 @@ class Employees implements IEmployees {
 
         return savedResult;
     }
+
+    // public async authenticate(username: string, password: string): Promise<{ 'user': User, 'message': string }> {
+    //     console.log(username + ' ----------- ' + password);
+
+    //     let result: User = await this.repo.getSingle(User, {
+    //         relations: ["user"],
+    //         where: {
+    //             "email": username
+    //         }
+    //     });
+    //     console.log(JSON.stringify(result));
+    //     if (result) {
+    //         return { 'user': result, 'message': null }
+    //     }
+    //     else {
+    //         return { 'user': result, 'message': 'user not found or some error' }
+    //     }
+    // }
 
 
 }
