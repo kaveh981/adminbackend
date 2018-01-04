@@ -1,8 +1,8 @@
 
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Menus as Menu ,Category} from './model-layer';
-import { IEmployees, Employees, IMenus, Menus, IRoles, Roles } from './business-layer';
+import { Users as User, Roles as Role, Employees as Employee, Menus as Menu, Category } from './model-layer';
+import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
 import { EmployeeController, RoleController, MenuController } from './lib/exporter';
 
@@ -68,6 +68,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
 container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IRoles>('Roles').to(Roles);
 container.bind<IMenus>('Menus').to(Menus);
+container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
 
 
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');

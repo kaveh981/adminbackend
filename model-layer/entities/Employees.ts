@@ -11,6 +11,12 @@ export class Employees {
     @Column()
     email: string;
 
+    @Column()
+    password: string;
+
+    @Column()
+    salt: string;
+
     @OneToOne(type => Users, user => user.employee)
     @JoinColumn()
     user: Users;
