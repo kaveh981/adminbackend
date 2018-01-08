@@ -3,7 +3,6 @@ import { Employees as Employee, Users as User, Roles as Role } from '../../../mo
 import { GenericRepository } from '../../../data-layer';
 import { IEmployees, ChangePassword } from './employees.infc';
 import { BusinessLayerHelper } from '../helper';
-import { ReturnStatus } from '../../../types.infc';
 
 
 @injectable()
@@ -122,25 +121,39 @@ class Employees implements IEmployees {
         return savedResult;
     }
 
-    // public async authenticate(username: string, password: string): Promise<{ 'user': User, 'message': string }> {
-    //     console.log(username + ' ----------- ' + password);
+    public async authenticate(username: string, password: string): Promise<any> {
+        console.log(username + ' ----------- ' + password);
 
-    //     let result: User = await this.repo.getSingle(User, {
-    //         relations: ["user"],
-    //         where: {
-    //             "email": username
-    //         }
-    //     });
-    //     console.log(JSON.stringify(result));
-    //     if (result) {
-    //         return { 'user': result, 'message': null }
-    //     }
-    //     else {
-    //         return { 'user': result, 'message': 'user not found or some error' }
-    //     }
-    // }
+        let result: Employee = await this.repo.getSingle(Employee, {
+            relations: ["user"],
+            where: {
+                "email": username
+            }
+        });
+        console.log(JSON.stringify(result));
+        if (result) {
+            if (this.helper.isPasswordCorrect(result.password, result.salt, password)) {
+                console.log('password correcttttttt');
+                return {
+                    message: null, user: {
+                        id: result.user.userId,
+                        firstname: result.user.name,
+                        lastname: result.user.family,
+                        email: result.email,
+                        password: result.password,
+                        verified: true
+                    }
+                };
+            } else {
+                return { message: 'wrong password', user: null };
+            }
 
-
+        } else {
+            return {
+                message: 'wrone username', user: null
+            };
+        }
+    }
 }
 export { Employees };
 

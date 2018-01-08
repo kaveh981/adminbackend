@@ -1,6 +1,5 @@
 
 import { Employees as Employee, Users as User } from '../../../model-layer';
-import { ReturnStatus } from '../../../types.infc';
 
 interface ChangePassword {
     id: number,
@@ -17,6 +16,7 @@ interface IEmployees {
     updatePassword(changePassword: ChangePassword): Promise<ReturnStatus>
     updateEmail(employee: Employee): Promise<ReturnStatus>
     removeById(id: number): Promise<User>;
+    authenticate(username: string, password: string): Promise<any>
 }
 export { IEmployees };
 

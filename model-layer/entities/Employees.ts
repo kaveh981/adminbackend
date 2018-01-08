@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne,ManyToMany, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToMany, OneToMany, JoinColumn } from "typeorm";
 import { Users } from "./Users";
-import {Roles} from './Roles';
+import { Roles } from './Roles';
+import { Clients } from './Clients';
 
 @Entity()
 export class Employees {
@@ -23,4 +24,10 @@ export class Employees {
 
     @ManyToMany(type => Roles, role => role.employees)
     employeesRoles: Roles[];
+
+    @OneToMany(type => Clients, client => client.employee, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    clients: Clients[];
 }

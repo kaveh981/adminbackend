@@ -1,10 +1,11 @@
 
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Menus as Menu, Category } from './model-layer';
-import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper } from './business-layer';
+import { Users as User, Roles as Role, Employees as Employee, Menus as Menu, Category, Clients as Client } from './model-layer';
+import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper, Membership, IClients, Clients } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
-import { EmployeeController, RoleController, MenuController } from './lib/exporter';
+import { EmployeeController, RoleController, MenuController, controllerFactory, MembershipMiddleware } from './lib/exporter';
+import * as express from 'express';
 
 let container = new Container();
 
@@ -50,7 +51,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Menu, Category
+            User, Role, Employee, Menu, Category, Client
         ],
         synchronize: false
     }
@@ -64,12 +65,32 @@ container.bind<any>('MysqlConfig').toConstantValue(
 //     database: "yyrqujvq"
 // });
 
-
 container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IRoles>('Roles').to(Roles);
 container.bind<IMenus>('Menus').to(Menus);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
+container.bind<Membership>('MembershipBusiness').to(Membership);
+container.bind<IClients>('Clients').to(Clients);
 
+const SECRET = 'server secret';
+container.bind<any>('authenticate').toConstantValue(require('express-jwt')({ secret: SECRET }));
+
+container.bind<MembershipMiddleware>('MembershipMiddleware').to(MembershipMiddleware);
+let membershipMiddleware = container.get<MembershipMiddleware>('MembershipMiddleware');
+container.bind<express.RequestHandler>('serializeUser').toConstantValue(membershipMiddleware.serializeUser);
+container.bind<express.RequestHandler>('serializeClient').toConstantValue(membershipMiddleware.serializeClient);
+container.bind<express.RequestHandler>('generateToken').toConstantValue(membershipMiddleware.generateToken);
+container.bind<express.RequestHandler>('generateRefreshToken').toConstantValue(membershipMiddleware.generateRefreshToken);
+container.bind<express.RequestHandler>('validateRefreshToken').toConstantValue(membershipMiddleware.validateRefreshToken);
+container.bind<express.RequestHandler>('rejectToken').toConstantValue(membershipMiddleware.rejectToken);
+container.bind<express.RequestHandler>('respond').toConstantValue(membershipMiddleware.respond.auth);
+container.bind<express.RequestHandler>('respondReject').toConstantValue(membershipMiddleware.respond.reject);
+container.bind<express.RequestHandler>('respondToken').toConstantValue(membershipMiddleware.respond.token);
+
+
+
+let myCcontroller = controllerFactory(container);
+container.bind<interfaces.Controller>(TYPE.Controller).to(myCcontroller).whenTargetNamed('Membership');
 
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(RoleController).whenTargetNamed('RoleController');
