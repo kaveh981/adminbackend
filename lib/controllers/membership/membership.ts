@@ -3,7 +3,7 @@ import { injectable, inject, Container } from 'inversify';
 import * as express from 'express';
 import { Request, Response } from 'express';
 import { Employees as Employee, Users as User } from '../../../model-layer';
-import { IEmployees, ChangePassword, Membership } from '../../../business-layer';
+import { IEmployees, ChangePassword } from '../../../business-layer';
 import { Payload } from '../../exporter';
 import { Strategy, ExtractJwt, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import * as passport from 'passport';
@@ -15,13 +15,12 @@ export function controllerFactory(container: Container) {
     @controller('/membership')
     class MembershipController {
         private _employees: IEmployees;
-        constructor( @inject('Employees') employees: IEmployees,
-            @inject('MembershipBusiness') membership: Membership) {
+        constructor( @inject('Employees') employees: IEmployees) {
             this._employees = employees;
-           membership.passportUse();
+         //  membership.passportUse();
         }
 
-        @httpPost('/login', passport.initialize(),
+        @httpPost('/login',
             container.get<express.RequestHandler>('serializeUser'),
             container.get<express.RequestHandler>('serializeClient'),
             container.get<express.RequestHandler>('generateToken'),

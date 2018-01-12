@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import * as bodyParser from 'body-parser';
-
-import { Container } from 'inversify';
+import * as express from 'express';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { container } from './container';
 
 // create server
 let server = new InversifyExpressServer(container);
 server.setConfig((app) => {
+
+  app.use(container.get<express.RequestHandler>('verifyUser'));
   // add body parser
   app.use(bodyParser.urlencoded({
     extended: true
@@ -21,9 +22,13 @@ server.setConfig((app) => {
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     next();
   });
-});
 
-console.log('new' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
+  app.use(container.get<any>('errorHandler'));
+});
+if (process.env.OPENSHIFT_NODEJS_IP) {
+  console.log('new ' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
+}
+
 let app = server.build();
 let port: number = Number.parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
 let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';

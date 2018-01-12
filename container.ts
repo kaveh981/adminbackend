@@ -2,9 +2,9 @@
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { Users as User, Roles as Role, Employees as Employee, Menus as Menu, Category, Clients as Client } from './model-layer';
-import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper, Membership, IClients, Clients } from './business-layer';
+import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper, IClients, Clients } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
-import { EmployeeController, RoleController, MenuController, controllerFactory, MembershipMiddleware } from './lib/exporter';
+import { EmployeeController, RoleController, MenuController, controllerFactory, Middlewares } from './lib/exporter';
 import * as express from 'express';
 
 let container = new Container();
@@ -69,23 +69,23 @@ container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IRoles>('Roles').to(Roles);
 container.bind<IMenus>('Menus').to(Menus);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
-container.bind<Membership>('MembershipBusiness').to(Membership);
 container.bind<IClients>('Clients').to(Clients);
 
-const SECRET = 'server secret';
-container.bind<any>('authenticate').toConstantValue(require('express-jwt')({ secret: SECRET }));
+container.bind<string>('Secret').toConstantValue('mgm secret key');
 
-container.bind<MembershipMiddleware>('MembershipMiddleware').to(MembershipMiddleware);
-let membershipMiddleware = container.get<MembershipMiddleware>('MembershipMiddleware');
-container.bind<express.RequestHandler>('serializeUser').toConstantValue(membershipMiddleware.serializeUser);
-container.bind<express.RequestHandler>('serializeClient').toConstantValue(membershipMiddleware.serializeClient);
-container.bind<express.RequestHandler>('generateToken').toConstantValue(membershipMiddleware.generateToken);
-container.bind<express.RequestHandler>('generateRefreshToken').toConstantValue(membershipMiddleware.generateRefreshToken);
-container.bind<express.RequestHandler>('validateRefreshToken').toConstantValue(membershipMiddleware.validateRefreshToken);
-container.bind<express.RequestHandler>('rejectToken').toConstantValue(membershipMiddleware.rejectToken);
-container.bind<express.RequestHandler>('respond').toConstantValue(membershipMiddleware.respond.auth);
-container.bind<express.RequestHandler>('respondReject').toConstantValue(membershipMiddleware.respond.reject);
-container.bind<express.RequestHandler>('respondToken').toConstantValue(membershipMiddleware.respond.token);
+container.bind<Middlewares>('Middlewares').to(Middlewares);
+let middlewares = container.get<Middlewares>('Middlewares');
+container.bind<express.RequestHandler>('serializeUser').toConstantValue(middlewares.serializeUser);
+container.bind<express.RequestHandler>('serializeClient').toConstantValue(middlewares.serializeClient);
+container.bind<express.RequestHandler>('generateToken').toConstantValue(middlewares.generateToken);
+container.bind<express.RequestHandler>('generateRefreshToken').toConstantValue(middlewares.generateRefreshToken);
+container.bind<express.RequestHandler>('validateRefreshToken').toConstantValue(middlewares.validateRefreshToken);
+container.bind<express.RequestHandler>('rejectToken').toConstantValue(middlewares.rejectToken);
+container.bind<express.RequestHandler>('respond').toConstantValue(middlewares.respond.auth);
+container.bind<express.RequestHandler>('respondReject').toConstantValue(middlewares.respond.reject);
+container.bind<express.RequestHandler>('respondToken').toConstantValue(middlewares.respond.token);
+container.bind<express.RequestHandler>('verifyUser').toConstantValue(middlewares.verifyUser);
+container.bind<any>('errorHandler').toConstantValue(middlewares.errorHandler);
 
 
 
