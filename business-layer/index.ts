@@ -5,6 +5,5 @@ export * from './lib/roles/roles';
 export * from './lib/menus/menus.infc';
 export * from './lib/menus/menus';
 export * from './lib/helper';
-export * from './lib/membership/membership';
 export * from './lib/clients/clients.infc';
 export * from './lib/clients/clients';

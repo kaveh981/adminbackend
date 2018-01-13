@@ -22,14 +22,12 @@ keypress(process.stdin);
 
 let suiteManager: SuiteHandler;
 let killCount: number = 0;
-console.log(process.argv);
 async function start() {
     let directory = program['directory'];
     let regex = program['regex'] && new RegExp(program['regex']);
     let restore = program['restore'];
     let file = program['file'];
     let testDirectory: string;
-    //console.log(JSON.stringify(program['options']));
 
     if (!directory && !file && !restore) {
 

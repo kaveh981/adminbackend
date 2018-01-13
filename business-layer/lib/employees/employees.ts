@@ -122,18 +122,14 @@ class Employees implements IEmployees {
     }
 
     public async authenticate(username: string, password: string): Promise<any> {
-        console.log(username + ' ----------- ' + password);
-
         let result: Employee = await this.repo.getSingle(Employee, {
             relations: ["user"],
             where: {
                 "email": username
             }
         });
-        console.log(JSON.stringify(result));
         if (result) {
             if (this.helper.isPasswordCorrect(result.password, result.salt, password)) {
-                console.log('password correcttttttt');
                 return {
                     message: null, user: {
                         id: result.user.userId,

@@ -42,7 +42,6 @@ class DataPopulator {
             parent.title = 'parentMenu';
             menu.parent = parent;
             let result = await this.repo.save(menu);
-            console.log('added menu: ' + JSON.stringify(result));
             return result;
         }
         return await this.repo.save(menu);

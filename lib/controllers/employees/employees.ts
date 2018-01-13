@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { Employees as Employee, Users as User } from '../../../model-layer';
 import { IEmployees, ChangePassword } from '../../../business-layer';
 import { Payload } from '../../exporter';
-import { ReturnStatus } from '../../../types.infc';
 
 @injectable()
 @controller('/employees')
@@ -14,9 +13,10 @@ export class EmployeeController {
     this._employees = employees;
   }
 
+
+
   @httpPost('/')
   public async addEmployee(request: Request): Promise<any> {
-    console.log(request.body);
     let user = new User();
     user.family = request.body['family'];
     user.name = request.body['name'];
@@ -52,22 +52,33 @@ export class EmployeeController {
   }
 
   @httpPut('/password')
-  public async changePassword(request: Request): Promise<ReturnStatus> {
+  public async changePassword(request: Request): Promise<any> {
     let changePassword: ChangePassword = {
       id: request.body['id'],
       oldPassword: request.body['oldPassword'],
       newPassword: request.body['newPassword']
     };
-    return await this._employees.updatePassword(changePassword);
+
+    let result = await this._employees.updatePassword(changePassword);
+    if (result.success) {
+      return result.message;
+    } else {
+      throw Error(result.message);
+    }
   }
 
   @httpPut('/email')
-  public async updateEmail(request: Request): Promise<ReturnStatus> {
+  public async updateEmail(request: Request): Promise<any> {
     let employee = new Employee();
     employee.email = request.body['email'];
     employee.employeeId = request.body['id'];
     employee.password = request.body['password'];
-    return await this._employees.updateEmail(employee);
+    let result = await this._employees.updateEmail(employee);
+    if (result.success) {
+      return result.message;
+    } else {
+      throw Error(result.message);
+    }
   }
 
   @httpDelete('/:id')

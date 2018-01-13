@@ -7,7 +7,6 @@ import { GenericRepository } from '../../../data-layer';
 class Clients implements IClients {
     constructor( @inject('GenericRepository') private repo: GenericRepository<any>) { }
     public async addClientToUser(employeeId: Number): Promise<Client> {
-        console.log(employeeId + 'add client ---------');
         let employee: Employees = await this.repo.getSingle(Employees, {
             where: {
                 "employeeId": employeeId
@@ -24,14 +23,12 @@ class Clients implements IClients {
                 clientId: data.clientId
             }
         });
-        console.log(JSON.stringify(data) + 'pppppppppp' + data.clientId);
         client.refreshToken = data.refreshToken;
         await this.repo.save(client);
         cb();
     }
 
     public async findClientByToken(refreshToken: string): Promise<{ error: Error, user: { userId, clientId } }> {
-        console.log('data-----------------' + JSON.stringify(refreshToken));
         if (!refreshToken) {
             return { error: new Error('invalid token'), user: null };
         }
@@ -42,7 +39,6 @@ class Clients implements IClients {
             }
         });
         if (client) {
-            //console.log(client);
             return {
                 error: null, user: {
                     userId: client.employee.employeeId,
