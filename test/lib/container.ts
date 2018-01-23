@@ -2,7 +2,7 @@
 import { Container } from 'inversify';
 import { GenericRepository, IGenericRepository } from '../../data-layer';
 import { QueryBuilder, DataSetup, APIRequestHandler, DataPopulator, TestHandler, SuiteHandler } from './exporter';
-import { Employees, Roles, Menus, Users } from '../../model-layer';
+import { Employees, Roles, Users } from '../../model-layer';
 
 let container = new Container();
 container.bind<DataSetup>('DataSetup').to(DataSetup);
@@ -44,7 +44,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            Users, Roles, Employees, Menus
+            Users, Roles, Employees
         ],
         synchronize: false
     }

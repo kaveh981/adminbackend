@@ -1,7 +1,7 @@
 
 
 import { injectable, inject } from 'inversify';
-import { Employees, Roles, Menus, Users } from '../../model-layer';
+import { Employees, Roles, Users } from '../../model-layer';
 import { QueryBuilder } from './exporter';
 import * as Knex from 'knex';
 
@@ -11,7 +11,7 @@ class DataSetup {
     constructor( @inject('QueryBuilder') private repo: QueryBuilder) { }
 
     private suffix: string = `_backup`;
-    private tables: [string] = ['employees', 'roles', 'menus', 'users','roles_employees_employees'];
+    private tables: [string] = ['employees', 'roles', 'users','roles_employees_employees'];
     /**
      * Backup table Check if the table not exist return if the backup table exist return otherwise it create a backup table and copy from original into it then clear the original table
      * @param table - The name of the table that we want to backup.

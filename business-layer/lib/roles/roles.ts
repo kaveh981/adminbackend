@@ -23,7 +23,6 @@ class Roles implements IRoles {
 
     public async  findById(id: number): Promise<Role> {
         let result: Role = await this.repo.getSingle(Role, {
-            alias: "roles",
             where: {
                 "roleId": id
             }

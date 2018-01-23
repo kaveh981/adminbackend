@@ -14,6 +14,10 @@ class Middlewares {
         @inject('Clients') private client: IClients, @inject('Secret') private secret) { }
 
     public verifyUser = (req, res, next) => {
+         if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+            console.log('No authentication needed');
+            return next();
+        } 
         if (/(membership)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();

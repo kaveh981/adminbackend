@@ -1,10 +1,10 @@
 
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Menus as Menu, Category, Clients as Client } from './model-layer';
-import { IEmployees, Employees, IMenus, Menus, IRoles, Roles, BusinessLayerHelper, IClients, Clients } from './business-layer';
+import { Users as User, Roles as Role, Employees as Employee, Category, Clients as Client } from './model-layer';
+import { IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
-import { EmployeeController, RoleController, MenuController, controllerFactory, Middlewares } from './lib/exporter';
+import { EmployeeController, RoleController, controllerFactory, Middlewares } from './lib/exporter';
 import * as express from 'express';
 
 let container = new Container();
@@ -51,9 +51,9 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Menu, Category, Client
+            User, Role, Employee, Category, Client
         ],
-        synchronize: false
+        synchronize: true
     }
 );
 // container.bind<any>('pgConfig').toConstantValue({
@@ -67,7 +67,6 @@ container.bind<any>('MysqlConfig').toConstantValue(
 
 container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IRoles>('Roles').to(Roles);
-container.bind<IMenus>('Menus').to(Menus);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
 container.bind<IClients>('Clients').to(Clients);
 
@@ -94,8 +93,7 @@ container.bind<interfaces.Controller>(TYPE.Controller).to(myCcontroller).whenTar
 
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(RoleController).whenTargetNamed('RoleController');
-container.bind<interfaces.Controller>(TYPE.Controller).to(MenuController).whenTargetNamed('MenuController');
 
-container.get<IGenericRepository<any>>('GenericRepository').init();
+//container.get<IGenericRepository<any>>('GenericRepository').init();
 
 export { container }

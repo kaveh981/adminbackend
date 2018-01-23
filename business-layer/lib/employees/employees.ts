@@ -19,10 +19,29 @@ class Employees implements IEmployees {
         return result;
     }
 
-    public async  getEmployees(): Promise<Employee[]> {
-        let result: Employee[] = await this.repo.list(Employee, { relations: ['user'] });
-        return result;
+
+    public async  getEmployees(pagination?: Pagination): Promise<Employee[]> {
+        let repo = await this.repo.getRepository(Employee)
+        let db = await repo.createQueryBuilder('employee');
+        if (pagination) {
+            return db.innerJoinAndSelect('employee.user', 'user')
+                .orderBy(pagination.sort, pagination.order)
+                .skip(pagination.skip)
+                .take(pagination.take)
+                .getMany();
+        }
+        else {
+            return db.getMany();
+        }
     }
+    // public async  getEmployees2(): Promise<Employee[]> {
+    //     let result: Employee[] = await this.repo.list(Employee, {
+    //         relations: ['user'],
+    //         order: { 'email': 1 }
+    //     });
+    //     console.log(result);
+    //     return result;
+    // }
 
     public async  findById(id: number): Promise<Employee> {
         let result: Employee = await this.repo.getSingle(Employee, {

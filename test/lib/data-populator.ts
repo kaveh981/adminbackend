@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericRepository } from '../../data-layer';
-import { Employees, Users, Roles, Menus } from '../../model-layer';
+import { Employees, Users, Roles } from '../../model-layer';
 
 
 /**
@@ -34,19 +34,6 @@ class DataPopulator {
         return await this.repo.save(role);
     }
 
-    public async createMenu(isMain: boolean, menu?: Menus): Promise<Menus> {
-        menu = menu || new Menus();
-        menu.title = menu.title || 'someTitle';
-        if (!isMain) {
-            let parent = menu.parent || new Menus();
-            parent.title = 'parentMenu';
-            menu.parent = parent;
-            let result = await this.repo.save(menu);
-            return result;
-        }
-        return await this.repo.save(menu);
-    }
-
     public async getUserById(id: number): Promise<Users> {
         let result: Users = await this.repo.getSingle(Users, {
             relations: ["employee"],
@@ -61,32 +48,6 @@ class DataPopulator {
         let result: Roles = await this.repo.getSingle(Roles, {
             where: {
                 "roleId": id
-            }
-        });
-        return result
-    }
-    public async getMenuById(id: number): Promise<Menus> {
-        let result: Menus = await this.repo.getSingle(Menus, {
-            relation: ['subMenus'],
-            where: {
-                menuId: id
-            }
-        });
-        return result
-    }
-    public async  getMainMenus(): Promise<Menus[]> {
-        let result: Menus[] = await this.repo.list(Menus, {
-            where: {
-                parentMenuId: 'IS NULL'
-            }
-        });
-        return result;
-    }
-    public async getSubMenusByParentId(id: number): Promise<Menus[]> {
-        let result: Menus[] = await this.repo.list(Menus, {
-            relation: ['subMenus'],
-            where: {
-                parentMenuId: id
             }
         });
         return result

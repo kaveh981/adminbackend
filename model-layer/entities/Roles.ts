@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne, OneToMany, JoinTable } from "typeorm";
 import { Employees } from './Employees';
-import { Menus } from './Menus';
 @Entity()
 export class Roles {
 
@@ -13,8 +12,5 @@ export class Roles {
     @ManyToMany(type => Employees, employee => employee.employeesRoles)
     @JoinTable()
     employees: Employees[];
-
-    @OneToMany(type => Menus, menu => menu.role)
-    menus: Menus[];
 
 }

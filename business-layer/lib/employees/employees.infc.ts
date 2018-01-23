@@ -10,7 +10,7 @@ export { ChangePassword };
 
 interface IEmployees {
     addEmployee(employee: User): Promise<User>;
-    getEmployees(): Promise<Employee[]>;
+    getEmployees(pagination: Pagination): Promise<Employee[]>;
     findById(id: number): Promise<Employee>;
     update(employee: User): Promise<User>;
     updatePassword(changePassword: ChangePassword): Promise<ReturnStatus>

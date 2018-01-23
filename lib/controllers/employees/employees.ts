@@ -17,6 +17,7 @@ export class EmployeeController {
 
   @httpPost('/')
   public async addEmployee(request: Request): Promise<any> {
+    console.log(request.body);
     let user = new User();
     user.family = request.body['family'];
     user.name = request.body['name'];
@@ -30,8 +31,16 @@ export class EmployeeController {
   }
 
   @httpGet('/')
-  public async get(): Promise<any> {
-    let res = await this._employees.getEmployees();
+  public async get(request: Request): Promise<any> {
+    
+    let pagination: Pagination = {
+      skip: request.query['skip'],
+      take: request.query['take'],
+      sort: request.query['sortBy'],
+      order: request.query['orderBy']
+    };
+console.log(pagination);
+    let res = await this._employees.getEmployees(pagination);
     return res.map((e) => Payload.getEmployee(e));
   }
 

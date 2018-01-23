@@ -1,14 +1,16 @@
 
 import { injectable, inject } from 'inversify';
-import { createConnection, Connection, getConnectionManager, ConnectionOptions, getManager } from "typeorm";
+import { createConnection, Connection, getConnectionManager, ConnectionOptions, getManager, Repository } from "typeorm";
 import { IGenericRepository, ObjectType } from './interfaces/generic-repository.infc';
 
 @injectable()
 class GenericRepository<T> implements IGenericRepository<T> {
-
+    db: Connection;
     private connection: Connection;
-    constructor( @inject('MysqlConfig') private config: ConnectionOptions) { }
-    public async init() {
+    constructor( @inject('MysqlConfig') private config: ConnectionOptions) {
+        this.init().then(connection => this.db = connection);
+    }
+    public async init(): Promise<Connection> {
 
         if (this.connection) {
             return this.connection;
@@ -19,8 +21,14 @@ class GenericRepository<T> implements IGenericRepository<T> {
         }
         console.log('connection is not on');
         this.connection = await createConnection(this.config);
+        this.db = this.connection;
         console.log('created new repo');
         return Promise.resolve(this.connection);
+    }
+
+    public async getRepository(type: ObjectType<T>): Promise<Repository<T>> {
+        this.db = await this.init();
+        return this.db.getRepository(type)
     }
 
     public async list(type: ObjectType<T>, findOptions?: any): Promise<T[]> {

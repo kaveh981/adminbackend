@@ -1,6 +1,6 @@
 // import "reflect-metadata";
 import { ConnectionOptions, createConnection } from "typeorm";
-import { Category, Users, Roles, Employees, Menus } from "./model-layer";
+import { Category, Users, Roles, Employees } from "./model-layer";
 
 const options: ConnectionOptions = {
     type: "mysql",
@@ -11,7 +11,7 @@ const options: ConnectionOptions = {
     database: "mgmdb",
 
     entities: [
-        Users, Roles, Employees, Menus, Category
+        Users, Roles, Employees, Category
     ],
     synchronize: false
 
