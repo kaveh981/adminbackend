@@ -1,7 +1,10 @@
 
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Category, Clients as Client } from './model-layer';
+import {
+    Users as User, Roles as Role, Employees as Employee, Category, Clients as Client,
+    AppUsers, Stories, StoryCategories
+} from './model-layer';
 import { IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
 import { EmployeeController, RoleController, controllerFactory, Middlewares } from './lib/exporter';
@@ -51,11 +54,24 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Category, Client
+            User, Role, Employee, Category, Client, StoryCategories, Stories, AppUsers
         ],
         synchronize: true
     }
 );
+// container.bind<any>('MysqlConfig').toConstantValue(
+//     {
+//         type: "mysql",
+//         url: '/cloudsql/' + 'sound-abbey-183822:us-east1:mgm',
+//         user: 'root',
+//         password: '123456',
+//         database: 'guestbook',
+//         entities: [
+//             User, Role, Employee, Category, Client, StoryCategories, Stories, AppUsers
+//         ],
+//         synchronize: true
+//     }
+// );
 // container.bind<any>('pgConfig').toConstantValue({
 //     type: "postgres",
 //     host: "pellefant.db.elephantsql.com",
