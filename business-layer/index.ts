@@ -5,3 +5,5 @@ export * from './lib/roles/roles';
 export * from './lib/helper';
 export * from './lib/clients/clients.infc';
 export * from './lib/clients/clients';
+export * from './lib/app-users/app-users.infc';
+export * from './lib/app-users/app-users';

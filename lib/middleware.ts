@@ -1,5 +1,5 @@
-import { IEmployees, IClients } from '../business-layer';
-import { Users, Employees } from '../model-layer';
+import { IEmployees, IClients, IAppUsers } from '../business-layer';
+import { Users, Employees, AppUsers } from '../model-layer';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 const crypto = require('crypto');
@@ -10,14 +10,14 @@ const TOKENTIME = 120 * 60; // in seconds
 @injectable()
 class Middlewares {
 
-    constructor( @inject('Employees') private employee: IEmployees,
+    constructor( @inject('Employees') private employee: IEmployees, @inject('AppUsers') private appUser: IAppUsers,
         @inject('Clients') private client: IClients, @inject('Secret') private secret) { }
 
     public verifyUser = (req, res, next) => {
-         if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+        if (/(employees)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
-        } 
+        }
         if (/(membership)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
@@ -38,6 +38,24 @@ class Middlewares {
     public serializeUser = (req, res, next) => {
         let result = this.employee.authenticate(req.body['username'], req.body['password']);
         result.then((user) => {
+            if (user.message) {
+                return next(user.message);
+            }
+            req.user = req.user || {};
+            req['user']['userId'] = user.user.id;
+            next();
+        }).catch(error => {
+            return next(error);
+        })
+    }
+
+    public serializeAppUser = (req, res, next) => {
+        let result = this.appUser.authenticate({
+            appID: req.body['appID'], externalAppUserId: req.body['externalAppUserId'],
+            phoneNumber: req.body['phoneNumber'], name: req.body['name']
+        });
+        result.then((user) => {
+            console.log(user);
             if (user.message) {
                 return next(user.message);
             }
