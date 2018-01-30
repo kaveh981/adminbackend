@@ -4,28 +4,23 @@ import {
 } from "typeorm";
 import { Users } from "./Users";
 import { Roles } from './Roles';
-import { Clients } from './Clients';
+import { Stories as Story } from './Stories';
+import { StoryPropNames as StoryPropName } from './StoryPropNames'
 
 @ClosureEntity()
-export class Employees {
+export class StoryCategories {
 
     @PrimaryGeneratedColumn()
-    employeeId: number;
+    categoryId: number;
 
     @Column()
-    email: string;
-
-    @Column()
-    password: string;
-
-    @Column()
-    salt: string;
+    category: string;
 
     @TreeChildren({ cascadeInsert: true, cascadeUpdate: true })
-    children: Employees[];
+    children: StoryCategories[];
 
     @TreeParent()
-    parent: Employees;
+    parent: StoryCategories;
 
     @TreeLevelColumn()
     level: number;
@@ -37,6 +32,10 @@ export class Employees {
     @ManyToMany(type => Roles, role => role.employees)
     employeesRoles: Roles[];
 
-    @OneToMany(type => Clients, client => client.employee)
-    clients: Clients[];
+    @OneToMany(type => Story, story => story.storyCategory)
+    stories: Story[];
+
+    @OneToMany(type => StoryPropName, storyPropName => storyPropName.storyCategory)
+    storyPropertyNames: StoryPropName[];
+
 }

@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from "typeorm";
 import { Employees } from './Employees';
+import { AppUsers } from './AppUsers';
 
 @Entity()
 export class Users {
@@ -19,4 +20,11 @@ export class Users {
         cascadeRemove: true
     })
     employee: Employees;
+
+    @OneToOne(type => AppUsers, appUser => appUser.user, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
+        cascadeRemove: true
+    })
+    appUser: AppUsers;
 }
