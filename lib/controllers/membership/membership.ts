@@ -30,6 +30,16 @@ export function controllerFactory(container: Container) {
             return response.send('login');
         }
 
+         @httpPost('/LoginApp',
+            container.get<express.RequestHandler>('serializeAppUser'),
+            container.get<express.RequestHandler>('serializeClient'),
+            container.get<express.RequestHandler>('generateToken'),
+            container.get<express.RequestHandler>('generateRefreshToken'),
+            container.get<express.RequestHandler>('respond'))
+        public async loginApp(request: Request, response: Response): Promise<any> {
+            return response.send('login');
+        }
+
         @httpPost('/token',
             container.get<express.RequestHandler>('validateRefreshToken'),
             container.get<express.RequestHandler>('generateToken'),

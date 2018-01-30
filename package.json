@@ -43,7 +43,9 @@
     "reflect-metadata": "^0.1.10",
     "request": "^2.83.0",
     "tape": "^4.8.0",
-    "typeorm": "^0.1.11"
+    "typeorm": "^0.1.11",
+    "nodemon": "^1.12.1",
+    "typescript": "^2.6.2"
   },
   "devDependencies": {
     "nodemon": "^1.12.1",

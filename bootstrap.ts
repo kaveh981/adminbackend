@@ -24,18 +24,78 @@ server.setConfig((app) => {
   });
 
   app.use(container.get<any>('errorHandler'));
+
 });
-if (process.env.OPENSHIFT_NODEJS_IP) {
-  console.log('new ' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
+
+let config = {
+  apiKey: "AIzaSyAkdO4EymxL81Iik6MJCUPfpFu8sDvL8dI",
+  authDomain: "shareit-f1f8a.firebaseapp.com",
+  databaseURL: "https://shareit-f1f8a.firebaseio.com",
+  projectId: "shareit-f1f8a",
+  storageBucket: "",
+};
+
+if (process.env.PORT) {
+  console.log('new ' + JSON.stringify(process.env.PORT));
 }
 
 let app = server.build();
-let port: number = Number.parseInt(process.env.OPENSHIFT_NODEJS_PORT) || 8080;
-let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+
+let port: number = normalizePort(process.env.PORT || '8080');
+let ip = process.env.IP || '0.0.0.0';
 app.listen(port, ip);
+app.on('error', onError);
 app.get('/', function (req, res) {
   res.send('Hello Kaveh!' + `, Server started on port ${port} and ip of ${ip} :)`);
 });
 console.log(`Server started on port ${port} and ip of ${ip} :)`);
 
+
+
+app.set('port', port);
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
 

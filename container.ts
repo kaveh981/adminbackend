@@ -1,8 +1,11 @@
 
 import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
-import { Users as User, Roles as Role, Employees as Employee, Category, Clients as Client } from './model-layer';
-import { IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients } from './business-layer';
+import {
+    Users as User, Roles as Role, Employees as Employee, Category, Clients as Client,
+    AppUsers as AppUser, Stories, StoryCategories, StoryPropNames, StoryProperties
+} from './model-layer';
+import { IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients, IAppUsers, AppUsers } from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
 import { EmployeeController, RoleController, controllerFactory, Middlewares } from './lib/exporter';
 import * as express from 'express';
@@ -51,11 +54,25 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Category, Client
+            User, Role, Employee, Category, Client, StoryCategories, Stories,
+            AppUser, StoryPropNames
         ],
         synchronize: true
     }
 );
+// container.bind<any>('MysqlConfig').toConstantValue(
+//     {
+//         type: "mysql",
+//         url: '/cloudsql/' + 'sound-abbey-183822:us-east1:mgm',
+//         user: 'root',
+//         password: '123456',
+//         database: 'guestbook',
+//         entities: [
+//             User, Role, Employee, Category, Client, StoryCategories, Stories, AppUsers
+//         ],
+//         synchronize: true
+//     }
+// );
 // container.bind<any>('pgConfig').toConstantValue({
 //     type: "postgres",
 //     host: "pellefant.db.elephantsql.com",
@@ -66,6 +83,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
 // });
 
 container.bind<IEmployees>('Employees').to(Employees);
+container.bind<IAppUsers>('AppUsers').to(AppUsers);
 container.bind<IRoles>('Roles').to(Roles);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
 container.bind<IClients>('Clients').to(Clients);
@@ -75,6 +93,7 @@ container.bind<string>('Secret').toConstantValue('mgm secret key');
 container.bind<Middlewares>('Middlewares').to(Middlewares);
 let middlewares = container.get<Middlewares>('Middlewares');
 container.bind<express.RequestHandler>('serializeUser').toConstantValue(middlewares.serializeUser);
+container.bind<express.RequestHandler>('serializeAppUser').toConstantValue(middlewares.serializeAppUser);
 container.bind<express.RequestHandler>('serializeClient').toConstantValue(middlewares.serializeClient);
 container.bind<express.RequestHandler>('generateToken').toConstantValue(middlewares.generateToken);
 container.bind<express.RequestHandler>('generateRefreshToken').toConstantValue(middlewares.generateRefreshToken);
