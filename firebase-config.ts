@@ -1,0 +1,12 @@
+export const FirebaseConfig = {
+  "type": "service_account",
+  "projectId": "chelpa-sms-verification",
+  "private_key_id": "ee5ceebf096098a248047327a0989b503cf11f7b",
+  "privateKey": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCReDzV/D72lqd0\nqjFczzqTR06ftatvS9Z33G5A4Pz/77Zyx4h407jfVZw7uhuU4Cu0u2xa5faJXX2U\n2iniLnTsbDWV6m61neuQRiEASD85DoMkLrsnb6qBJjOqo4Z/NMgvQbKYMxrYXlaH\ndlhuJ3cmQ8ZLqMPaVw89jhvtaWvAl4JmqjQ66fOsraafzbtWzZjmeMOAW96qNqd8\nJsZo4bJY/l1k8AmKpOzhM4P3PqAugqHkhLLlxeR+skYokwyOmV6nBstU+ItE7sCs\nkSzBErqr5OZsiUPSCHutjQqev6H+sfKt7iVTf6dMOH3Z6ohMxRZvusoZ19ZmoqHe\njq90/kAnAgMBAAECggEABFbeRPrt5bXSflLsFn3Kv0siHCUQl5qNq73s/sGjAyIv\nCH/wbLwYFxnGns5ldWnBNAICtk+eRAXpPVL59sckzxx19gVJL+DrZ0ofhocJ6qyp\npirL+CPeX/f4K5WaAIj1ZnyRWjsy8TbpBQ4Ud60Xy0wBz+A8UH51KG06eiGSyJl/\nawPUCIf/hOgK04dPSe07KwmQ6FslPqgeN6gB1/EvMTSb9OAp4DvX1EalZ3Kf05k9\naY0DF/y1RM+ryOl72AfAmLjlB98ZAPlBc10zkZcjkoUfJl38EY6ZC+CBZOZgf1L6\nkBA3bC3KhqcGWzZcwFG013mHGuewv3csZnDRVVwATQKBgQDNX96FpYWrvv7QnZe9\nHPxHcSzN9pYTR/ScWPutaUkZ8UU7G7xfZUkGL7pR23nXa7AY5SzhS5lACRVZ29pv\nhLZGPfC3CbC7+iE0Hx/ufdEL+D/wYZHHrV7UdMpHK+TPdJ1geykiTTYHUU2G+v30\n9uXM3/tC/wE3Njs/26NGRm8ztQKBgQC1VBVAVi/LH1clljgr9Kr3prwyJGeqFs0w\nDY/jEmCxL9b7JuUs2MjTLBMyxlUaInvtuAuKKd0ZTizjpvCYspW5MJnB4tl1p2vr\nGaCkzjJGSl2PP8NsUpkiVE0NWKKnFFwq5chMnrDKyL7kjfBlS324jxxJ+OJAFmim\ngbu7tFJF6wKBgE1j6v6BuTVW677BJATnf0mMpE2YtkTdwJeKEIzwN9PGz0fO09U+\n3Z2vLo7aHbfHpLw84ASl8EHpKlqKNm3/nJArlyHiTO8I+qohcG72imfwTGfQ3JZa\nBnoY6ICZUce7MfLBdmauocVwJb7PphNBVqc1YAGHBnY/wWP26Df7IrxhAoGAGozh\nP7Ze8SL5o6tHNkhw8CodzEnAVAtap/qUYu9B8S/MDqI3VEW5whHmDb00oMsD0l7s\ncaKHmTj1IbBD8lfTzHXtTZJlvPBywM3T083NVrV01ZDEkIvXmEs3rQiZaFV22WEj\n3vQtdsPGD7koxewz0F5ECiDDIBcn45mDX4ybr1kCgYBYEkX8d0hze/l/ApCR1hjx\ngBsD7WzDMb/xXX64oSuZ5LfH5zS+qplFsZM6QQRQRC08gwkPgiieO4KcNjvvONlQ\n20484NPhWuZKXNPT5y5AETjMl87at4+sK0HrQ8PmA1PdIv2Y0fidKBw6cC7T/07i\nf048D0MnUyq3dBrNEAN2YA==\n-----END PRIVATE KEY-----\n",
+  "clientEmail": "firebase-adminsdk-whx5g@chelpa-sms-verification.iam.gserviceaccount.com",
+  "client_id": "115480914632135639143",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-whx5g%40chelpa-sms-verification.iam.gserviceaccount.com"
+}
