@@ -34,7 +34,8 @@ if (process.env.PORT) {
 let app = server.build();
 
 let port: number = normalizePort(process.env.PORT || '8080');
-let ip = process.env.IP || '0.0.0.0';
+let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+// let ip = process.env.IP || '0.0.0.0';
 app.listen(port, ip);
 app.on('error', onError);
 app.get('/', function (req, res) {
