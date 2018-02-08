@@ -3,6 +3,9 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { container } from './container';
+import * as admin from 'firebase-admin';
+import { FirebaseConfig } from "./firebase-config";
+
 
 // create server
 let server = new InversifyExpressServer(container);
@@ -26,6 +29,14 @@ server.setConfig((app) => {
   app.use(container.get<any>('errorHandler'));
 
 });
+
+admin.initializeApp({
+  credential: admin.credential.cert(FirebaseConfig),
+  databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
+});
+
+console.log('new' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
+
 
 if (process.env.PORT) {
   console.log('new ' + JSON.stringify(process.env.PORT));
