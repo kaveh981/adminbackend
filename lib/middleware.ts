@@ -2,6 +2,7 @@ import { IEmployees, IClients, IAppUsers } from '../business-layer';
 import { Users, Employees, AppUsers } from '../model-layer';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
+import * as admin from 'firebase-admin';
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -32,6 +33,35 @@ class Middlewares {
                 req.user.id = user.id;
                 next();
             })
+        }
+    }
+
+    public verifyAppUser = (req, res, next) => {
+
+        if (/(something)/.test(req.originalUrl) || req.path === '/') {
+            console.log('No authentication needed');
+            return next();
+        } else {
+            // const firebaseConfig = {
+            //     apiKey: "AIzaSyAVREAUgG53zTYKUGUYI81IZPq5g-205DI",
+            //     authDomain: "chelpa-sms-verification.firebaseapp.com",
+            //     databaseURL: "https://chelpa-sms-verification.firebaseio.com",
+            //     projectId: "chelpa-sms-verification",
+            //     storageBucket: "chelpa-sms-verification.appspot.com",
+            //     messagingSenderId: "264292606260"
+            // };
+            admin.initializeApp({
+                credential: admin.credential.cert(require("../firebase-config.json")),
+                databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
+            });
+            admin.auth().verifyIdToken(req.headers.authorization.toString())
+                .then(function (decodedToken) {
+                    req.user = req.user || {};
+                    req.user.appid = decodedToken.uid;
+                    next();
+                }).catch(function (error) {
+                    return next(error)
+                });
         }
     }
 
@@ -112,6 +142,17 @@ class Middlewares {
         token: (req, res) => {
             res.status(201).json({
                 token: req.token
+            });
+        },
+        reject: (req, res) => {
+            res.status(204).end();
+        }
+    };
+
+    public appRespond = {
+        auth: (req, res) => {
+            res.status(200).json({
+                user: req.user
             });
         },
         reject: (req, res) => {
