@@ -27,14 +27,6 @@ server.setConfig((app) => {
 
 });
 
-let config = {
-  apiKey: "AIzaSyAkdO4EymxL81Iik6MJCUPfpFu8sDvL8dI",
-  authDomain: "shareit-f1f8a.firebaseapp.com",
-  databaseURL: "https://shareit-f1f8a.firebaseio.com",
-  projectId: "shareit-f1f8a",
-  storageBucket: "",
-};
-
 if (process.env.PORT) {
   console.log('new ' + JSON.stringify(process.env.PORT));
 }

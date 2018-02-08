@@ -12,17 +12,17 @@ class AppUsers implements IAppUsers {
         @inject('BusinessLayerHelper') private helper: BusinessLayerHelper) { }
 
     public async authenticate(appUser: AppUserRegister): Promise<any> {
+        if (appUser.appID && appUser.appID !== '1:264292606260:android:334752b62c4bdab7') {
+            return {
+                message: 'Wrong app Id', user: null
+            }
+        }
         let result: AppUser = await this.repo.getSingle(AppUser, {
             relations: ["user"],
             where: {
                 "externalAppUserId": appUser.externalAppUserId
             }
         });
-        if (appUser.appID && appUser.appID !== '1:264292606260:android:334752b62c4bdab7') {
-            return {
-                message: 'Wrong app Id', user: null
-            }
-        }
         if (result) {
             return {
                 message: null, user: {
