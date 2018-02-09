@@ -11,7 +11,7 @@ class DataSetup {
     constructor( @inject('QueryBuilder') private repo: QueryBuilder) { }
 
     private suffix: string = `_backup`;
-    private tables: [string] = ['employees', 'roles', 'users','roles_employees_employees'];
+    private tables: string[] = ['employees', 'roles', 'users','roles_employees_employees'];
     /**
      * Backup table Check if the table not exist return if the backup table exist return otherwise it create a backup table and copy from original into it then clear the original table
      * @param table - The name of the table that we want to backup.
