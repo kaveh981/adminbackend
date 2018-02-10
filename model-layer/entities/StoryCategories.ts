@@ -25,17 +25,23 @@ export class StoryCategories {
     @TreeLevelColumn()
     level: number;
 
-    @OneToOne(type => Users, user => user.employee)
+    @OneToOne(type => Users, user => user.employee, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
     @JoinColumn()
     user: Users;
 
-    @ManyToMany(type => Roles, role => role.employees)
-    employeesRoles: Roles[];
-
-    @OneToMany(type => Story, story => story.storyCategory)
+    @OneToMany(type => Story, story => story.storyCategory, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
     stories: Story[];
 
-    @OneToMany(type => StoryPropName, storyPropName => storyPropName.storyCategory)
+    @OneToMany(type => StoryPropName, storyPropName => storyPropName.storyCategory, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
     storyPropertyNames: StoryPropName[];
 
 }

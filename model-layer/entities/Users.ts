@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { Employees } from './Employees';
 import { AppUsers } from './AppUsers';
+import { StoryPropNames } from './StoryPropNames';
+import { Stories } from './Stories';
 
 @Entity()
 export class Users {
@@ -16,8 +18,7 @@ export class Users {
 
     @OneToOne(type => Employees, employee => employee.user, {
         cascadeInsert: true,
-        cascadeUpdate: true,
-        cascadeRemove: true
+        cascadeUpdate: true
     })
     employee: Employees;
 
@@ -27,4 +28,16 @@ export class Users {
         cascadeRemove: true
     })
     appUser: AppUsers;
+
+    @OneToMany(type => StoryPropNames, storyPropName => storyPropName.creator, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    storyPropNames: StoryPropNames[];
+
+    @OneToMany(type => Stories, story => story.creator, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    stories: Stories[];
 }

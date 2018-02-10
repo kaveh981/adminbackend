@@ -65,6 +65,16 @@ class AppUsers implements IAppUsers {
         let result: any = await this.repo.save(user);
         return result;
     }
+
+      public async  findAppUserById(id: number): Promise<AppUser> {
+        let result: AppUser = await this.repo.getSingle(AppUser, {
+            relations: ["user"],
+            where: {
+                "userUserId": id
+            }
+        });
+        return result;
+    }
 }
 export { AppUsers };
 

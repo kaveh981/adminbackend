@@ -6,30 +6,41 @@ import { Users } from "./Users";
 import { AppUsers as AppUser } from './AppUsers';
 import { Stories as Story } from './Stories';
 import { StoryCategories as StoryCategory } from './StoryCategories';
+import { StoryProperties } from './StoryProperties';
 
 @Entity()
 export class StoryPropNames {
 
     @PrimaryGeneratedColumn()
-    propertyId: number;
+    propertyNameId: number;
 
-    @Column()
+    @Column({ unique: true })
     propertyName: string;
 
     @Column()
-    visible: boolean;
+    status: Status;
 
     @CreateDateColumn()
     timestamp: Date
 
-    @OneToOne(type => Users, user => user.employee)
-    @JoinColumn()
-    user: Users;
-
-    @ManyToOne(type => StoryCategory, storyCategory => storyCategory.storyPropertyNames)
+    @ManyToOne(type => StoryCategory, storyCategory => storyCategory.storyPropertyNames, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
+        cascadeRemove: true
+    })
     storyCategory: StoryCategory;
 
-    @ManyToOne(type => AppUser, appUser => appUser.storyPropertyNames)
-    creator: AppUser;
+    @ManyToOne(type => Users, user => user.storyPropNames, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
+        cascadeRemove: true
+    })
+    creator: Users;
+
+    @OneToMany(type => StoryPropNames, storyPropName => storyPropName.propertyName, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    storyProperties: StoryProperties[];
 
 }

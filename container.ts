@@ -3,11 +3,14 @@ import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import {
     Users as User, Roles as Role, Employees as Employee, Category, Clients as Client,
-    AppUsers as AppUser, Stories, StoryCategories, StoryPropNames, StoryProperties
+    AppUsers as AppUser, Stories as Story, StoryCategories, StoryPropNames, StoryProperties as StoryProperty
 } from './model-layer';
-import { IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients, IAppUsers, AppUsers } from './business-layer';
+import {
+    IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients,
+    IAppUsers, AppUsers, IUsers, Users, IStoryProperties, StoryProperties, IStories, Stories
+} from './business-layer';
 import { IGenericRepository, GenericRepository } from './data-layer';
-import { EmployeeController, RoleController, controllerFactory, Middlewares } from './lib/exporter';
+import { EmployeeController, RoleController, controllerFactory, Middlewares, StoryController } from './lib/exporter';
 import * as express from 'express';
 
 let container = new Container();
@@ -54,8 +57,8 @@ container.bind<any>('MysqlConfig').toConstantValue(
         database: "mgmdb",
 
         entities: [
-            User, Role, Employee, Category, Client, StoryCategories, Stories,
-            AppUser, StoryPropNames
+            User, Role, Employee, Category, Client, StoryCategories, Story,
+            AppUser, StoryPropNames, StoryProperty
         ],
         synchronize: true
     }
@@ -84,6 +87,9 @@ container.bind<any>('MysqlConfig').toConstantValue(
 
 container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IAppUsers>('AppUsers').to(AppUsers);
+container.bind<IStories>('Stories').to(Stories);
+container.bind<IUsers>('Users').to(Users);
+container.bind<IStoryProperties>('StoryProperties').to(StoryProperties);
 container.bind<IRoles>('Roles').to(Roles);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
 container.bind<IClients>('Clients').to(Clients);
@@ -109,7 +115,7 @@ container.bind<any>('errorHandler').toConstantValue(middlewares.errorHandler);
 
 let myCcontroller = controllerFactory(container);
 container.bind<interfaces.Controller>(TYPE.Controller).to(myCcontroller).whenTargetNamed('Membership');
-
+container.bind<interfaces.Controller>(TYPE.Controller).to(StoryController).whenTargetNamed('StoryController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(RoleController).whenTargetNamed('RoleController');
 
