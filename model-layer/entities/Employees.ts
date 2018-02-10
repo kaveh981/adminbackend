@@ -1,5 +1,5 @@
 import {
-    ClosureEntity, Column, PrimaryGeneratedColumn, TreeChildren, TreeParent,
+    ClosureEntity, Column, PrimaryColumn, TreeChildren, TreeParent,
     TreeLevelColumn, OneToOne, ManyToMany, OneToMany, JoinColumn
 } from "typeorm";
 import { Users } from "./Users";
@@ -9,7 +9,7 @@ import { Clients } from './Clients';
 @ClosureEntity()
 export class Employees {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     employeeId: number;
 
     @Column()
@@ -30,13 +30,23 @@ export class Employees {
     @TreeLevelColumn()
     level: number;
 
-    @OneToOne(type => Users, user => user.employee)
-    @JoinColumn()
+    @OneToOne(type => Users, user => user.employee, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
+        cascadeRemove: true
+    })
+    @JoinColumn({ name: 'employeeId', referencedColumnName: 'userId' })
     user: Users;
 
-    @ManyToMany(type => Roles, role => role.employees)
+    @ManyToMany(type => Roles, role => role.employees,{
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
     employeesRoles: Roles[];
 
-    @OneToMany(type => Clients, client => client.employee)
+    @OneToMany(type => Clients, client => client.employee, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
     clients: Clients[];
 }

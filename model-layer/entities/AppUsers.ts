@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { Users } from "./Users";
 import { Clients } from './Clients';
 import { Stories as Story } from './Stories';
@@ -7,7 +7,7 @@ import { StoryPropNames as StoryPropName } from './StoryPropNames';
 @Entity()
 export class AppUsers {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     appUserId: number;
 
     @Column()
@@ -25,8 +25,11 @@ export class AppUsers {
     @Column({ nullable: true })
     salt: string;
 
-    @OneToOne(type => Users, user => user.appUser)
-    @JoinColumn()
+    @OneToOne(type => Users, user => user.appUser, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    @JoinColumn({ name: 'appUserId', referencedColumnName: 'userId' })
     user: Users;
 
     @OneToMany(type => Clients, client => client.employee, {
@@ -34,10 +37,4 @@ export class AppUsers {
         cascadeUpdate: true
     })
     clients: Clients[];
-
-    @OneToMany(type => Story, story => story.creator)
-    stories: Story[];
-
-    @OneToMany(type => StoryPropName, storyPropName => storyPropName.creator)
-    storyPropertyNames: StoryPropName[];
 }
