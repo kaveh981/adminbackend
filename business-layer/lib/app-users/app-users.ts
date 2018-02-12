@@ -70,7 +70,7 @@ class AppUsers implements IAppUsers {
         let result: AppUser = await this.repo.getSingle(AppUser, {
             relations: ["user"],
             where: {
-                "userUserId": id
+                "appUserId": id
             }
         });
         return result;

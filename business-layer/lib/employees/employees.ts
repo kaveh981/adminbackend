@@ -47,7 +47,7 @@ class Employees implements IEmployees {
         let result: Employee = await this.repo.getSingle(Employee, {
             relations: ["user"],
             where: {
-                "userUserId": id
+                "employeeId": id
             }
         });
         return result;
@@ -116,7 +116,7 @@ class Employees implements IEmployees {
         });
         let employee: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "userUserId": id
+                "employeeId": id
             }
         });
         await this.repo.remove([employee, user]);
@@ -126,7 +126,7 @@ class Employees implements IEmployees {
     public async  addRoleToEmployee(employeeId: number, roleId: number): Promise<User> {
         let employee: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "userUserId": employeeId
+                "employeeId": employeeId
             }
         });
         let role: Role = await this.repo.getSingle(Role, {
