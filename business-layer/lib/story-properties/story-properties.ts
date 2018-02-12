@@ -28,13 +28,12 @@ class StoryProperties implements IStoryProperties {
         });
         return result;
     }
-    public async getPropNames(propName: string): Promise<StoryPropNames[]> {
+    public async getPropNames(propName: string, take: number): Promise<StoryPropNames[]> {
         let repo = await this.repo.getRepository(StoryPropNames)
         let db = await repo.createQueryBuilder('StoryPropNames');
-        return db.innerJoinAndSelect('employee.user', 'user')
-            .where(`StoryPropNames.propertyName LIKE '%${propName}%'`)
+        return db.where(`StoryPropNames.propertyName LIKE '%${propName}%'`)
             .orderBy('propertyName')
-            .take(10)
+            .take(take)
             .getMany();
     }
 

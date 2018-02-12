@@ -2,14 +2,14 @@ import { controller, httpGet, httpPost, httpPut, httpDelete } from 'inversify-ex
 import { injectable, inject } from 'inversify';
 import { Request } from 'express';
 import { Stories as Story } from '../../../model-layer';
-import { IStories } from '../../../business-layer';
+import { IStories, IStoryProperties } from '../../../business-layer';
 import { Payload } from '../../exporter';
 
 @injectable()
 @controller('/stories')
 export class StoryController {
 
-  constructor( @inject('Stories') private stories: IStories) { }
+  constructor( @inject('Stories') private stories: IStories, @inject('StoryProperties') private storyProperties: IStoryProperties) { }
 
   @httpPost('/')
   public async addStory(request: Request): Promise<any> {
@@ -24,4 +24,11 @@ export class StoryController {
     }
     return await this.stories.addStory(story);
   }
+
+  @httpGet('/propertynames')
+  public async getPropertyNames(request: Request): Promise<any> {
+    let res = await this.storyProperties.getPropNames(request.query['property'], request.query['take'], );
+    return res.map((e) => Payload.getPropertyNames(e));
+  }
+
 }
