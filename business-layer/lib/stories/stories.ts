@@ -12,7 +12,7 @@ class Stories implements IStories {
     constructor( @inject('GenericRepository') private repo: GenericRepository<any>,
         @inject('StoryProperties') private storyProperties: IStoryProperties, @inject('Users') private users: IUsers) { }
 
-    public async  addStory(story: AddStory): Promise<Story> {
+    public async  addStory(story: AddStory): Promise<ReturnStatus> {
 
         let creator = await this.users.getUserById(story.creatorId);
         if (creator) {
@@ -31,7 +31,7 @@ class Stories implements IStories {
                     let storyPropName = await this.storyProperties.getPropNameById(property.propertyId)
                     console.log(storyPropName);
                     if (!storyPropName) {
-                        return null;
+                        return { success: false, message: 'propertyId is invalid.' };
                     }
                     newStoryProp.storyPropName = storyPropName;
                 } else {
@@ -40,16 +40,16 @@ class Stories implements IStories {
                     newPropName.propertyName = property.property;
                     newPropName.status = Status.active;
                     newStoryProp.storyPropName = newPropName;
+                    newStoryProp.story = newStory;
                 }
                 newStoryProp.value = property.value;
-                newStoryProp.story = newStory;
                 newStoryProperties.push(newStoryProp);
             });
             newStory.storyProperties = newStoryProperties
             let result: Story = await this.repo.save(newStory);
-            return result;
+            return { success: true, message: 'Story added successfuly!' };
         }
-        return null;
+        return { success: false, message: 'creator is not avaiable' };
     }
 }
 export { Stories };
