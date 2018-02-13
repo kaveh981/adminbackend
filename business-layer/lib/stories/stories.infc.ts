@@ -1,8 +1,9 @@
 
-import { Stories as Story} from '../../../model-layer';
+import { Stories } from '../../../model-layer';
 
 interface IStories {
     addStory(story: AddStory): Promise<ReturnStatus>;
+    getStories(story: string, take: number): Promise<Stories[]>
 }
 export { IStories };
 

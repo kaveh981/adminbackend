@@ -1,4 +1,4 @@
-import { Employees, Users, StoryPropNames } from '../model-layer';
+import { Employees, Users, StoryPropNames, Stories } from '../model-layer';
 
 export module Payload {
 
@@ -11,6 +11,12 @@ export module Payload {
     export function getPropertyNames(e: StoryPropNames) {
         return {
             property: e.propertyName, propertyId: e.propertyNameId
+        }
+    };
+
+    export function getStoryNames(e: Stories) {
+        return {
+            property: e.name, propertyId: e.storyId
         }
     };
 

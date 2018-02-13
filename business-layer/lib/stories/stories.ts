@@ -51,6 +51,16 @@ class Stories implements IStories {
         }
         return { success: false, message: 'creator is not avaiable' };
     }
+
+    public async getStories(story: string, take: number): Promise<Story[]> {
+        let repo = await this.repo.getRepository(Story)
+        let db = await repo.createQueryBuilder('stories');
+        return db.where(`stories.name LIKE '%${story}%'`)
+            .andWhere("stories.status = :status", { status: Status.active })
+            .orderBy('name')
+            .take(take)
+            .getMany();
+    }
 }
 export { Stories };
 
