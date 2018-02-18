@@ -47,7 +47,7 @@ class Employees implements IEmployees {
         let result: Employee = await this.repo.getSingle(Employee, {
             relations: ["user"],
             where: {
-                "employeeId": id
+                "userUserId": id
             }
         });
         return result;
@@ -69,7 +69,7 @@ class Employees implements IEmployees {
     public async  updatePassword(changePassword: ChangePassword): Promise<ReturnStatus> {
         let result: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "employeeId": changePassword.id
+                "userUserId": changePassword.id
             }
         });
         if (result) {
@@ -91,7 +91,7 @@ class Employees implements IEmployees {
     public async  updateEmail(employee: Employee): Promise<ReturnStatus> {
         let result: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "employeeId": employee.employeeId
+                "userUserId": employee.employeeId
             }
         });
         if (result) {
@@ -116,7 +116,7 @@ class Employees implements IEmployees {
         });
         let employee: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "employeeId": id
+                "userUserId": id
             }
         });
         await this.repo.remove([employee, user]);
@@ -126,7 +126,7 @@ class Employees implements IEmployees {
     public async  addRoleToEmployee(employeeId: number, roleId: number): Promise<User> {
         let employee: Employee = await this.repo.getSingle(Employee, {
             where: {
-                "employeeId": employeeId
+                "userUserId": employeeId
             }
         });
         let role: Role = await this.repo.getSingle(Role, {
@@ -141,6 +141,7 @@ class Employees implements IEmployees {
     }
 
     public async authenticate(username: string, password: string): Promise<any> {
+         console.log(username);
         let result: Employee = await this.repo.getSingle(Employee, {
             relations: ["user"],
             where: {

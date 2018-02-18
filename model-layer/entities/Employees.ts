@@ -1,5 +1,5 @@
 import {
-    ClosureEntity, Column, PrimaryColumn, TreeChildren, TreeParent,
+    ClosureEntity, Column, PrimaryGeneratedColumn, TreeChildren, TreeParent,
     TreeLevelColumn, OneToOne, ManyToMany, OneToMany, JoinColumn
 } from "typeorm";
 import { Users } from "./Users";
@@ -9,7 +9,7 @@ import { Clients } from './Clients';
 @ClosureEntity()
 export class Employees {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     employeeId: number;
 
     @Column()
@@ -35,7 +35,7 @@ export class Employees {
         cascadeUpdate: true,
         cascadeRemove: true
     })
-    @JoinColumn({ name: 'employeeId', referencedColumnName: 'userId' })
+    @JoinColumn()
     user: Users;
 
     @ManyToMany(type => Roles, role => role.employees,{
