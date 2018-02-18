@@ -5,26 +5,21 @@ import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-util
 import { container } from './container';
 import * as admin from 'firebase-admin';
 import { FirebaseConfig } from "./firebase-config";
-
+let cors = require('cors')
 
 // create server
 let server = new InversifyExpressServer(container);
 server.setConfig((app) => {
 
+  // this is to allow cors
+  app.use(cors());
+ 
   app.use(container.get<express.RequestHandler>('verifyUser'));
   // add body parser
   app.use(bodyParser.urlencoded({
     extended: true
   }));
   app.use(bodyParser.json());
-
-  // this is to allow cors
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-    next();
-  });
 
   app.use(container.get<any>('errorHandler'));
 
