@@ -3,7 +3,6 @@ import { Users, Employees, AppUsers } from '../model-layer';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as admin from 'firebase-admin';
-import { FirebaseConfig } from "../firebase-config";
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -39,12 +38,13 @@ class Middlewares {
     }
 
     public verifyAppUser = (req, res, next) => {
-        // if (1 === 1)
-        //     return next();
-        if (/(stories)/.test(req.originalUrl) || req.path === '/') {
+        if (/(membership)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
-        } else if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+        }
+        if (/(stories)/.test(req.originalUrl) || req.path === '/')
+            return next();
+        if (/(employees)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
         } else {
@@ -58,10 +58,10 @@ class Middlewares {
             // };
 
             // console.log(FirebaseConfig);
-            admin.initializeApp({
-                credential: admin.credential.cert(FirebaseConfig),
-                databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
-            });
+            // admin.initializeApp({
+            //     credential: admin.credential.cert(FirebaseConfig),
+            //     databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
+            // });
 
             admin.auth().verifyIdToken(req.headers.authorization.toString())
                 .then(function (decodedToken) {
