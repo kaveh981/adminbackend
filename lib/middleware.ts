@@ -3,6 +3,7 @@ import { Users, Employees, AppUsers } from '../model-layer';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as admin from 'firebase-admin';
+import { FirebaseConfig } from "../firebase-config";
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -15,20 +16,21 @@ class Middlewares {
         @inject('Clients') private client: IClients, @inject('Secret') private secret) { }
 
     public verifyUser = (req, res, next) => {
-        if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+        if (/(mmmmm)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
         }
         if (/(membership)/.test(req.originalUrl) || req.path === '/') {
-            console.log('No authentication needed');
+            console.log('No authentication needed membership');
             return next();
         } else {
             const jwt = require('jsonwebtoken');
-            console.log(req.headers.authorization.toString().replace('bearer ', ''));
+            console.log(req.headers);
             let u = jwt.verify(req.headers.authorization.toString().replace('bearer ', ''), this.secret, (error, user) => {
                 if (error) {
                     return next(error)
                 }
+                console.log('verified');
                 req.user = req.user || {};
                 req.user.id = user.id;
                 next();
@@ -37,9 +39,12 @@ class Middlewares {
     }
 
     public verifyAppUser = (req, res, next) => {
-        if (1 === 1)
+        // if (1 === 1)
+        //     return next();
+        if (/(stories)/.test(req.originalUrl) || req.path === '/') {
+            console.log('No authentication needed');
             return next();
-        if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+        } else if (/(employees)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
         } else {
@@ -53,10 +58,10 @@ class Middlewares {
             // };
 
             // console.log(FirebaseConfig);
-            // admin.initializeApp({
-            //     credential: admin.credential.cert(FirebaseConfig),
-            //     databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
-            // });
+            admin.initializeApp({
+                credential: admin.credential.cert(FirebaseConfig),
+                databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
+            });
 
             admin.auth().verifyIdToken(req.headers.authorization.toString())
                 .then(function (decodedToken) {
