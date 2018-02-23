@@ -34,4 +34,5 @@ export module Payload {
             })
         }
     }
+}
 
