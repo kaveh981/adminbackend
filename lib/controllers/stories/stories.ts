@@ -16,6 +16,7 @@ export class StoryController {
     let story: AddStory = {
       creatorId: request.body['creatorId'],
       name: request.body['name'],
+      description: request.body['description'],
       time: request.body['time'],
       price: request.body['price'],
       location: request.body['location'],
@@ -27,13 +28,19 @@ export class StoryController {
 
   @httpGet('/')
   public async getStories(request: Request): Promise<any> {
-    let res = await this.stories.getStories(request.query['story'], request.query['take'] );
+    let res = await this.stories.getStories(request.query['story'], request.query['take']);
     return res.map((e) => Payload.getStoryNames(e));
+  }
+
+  @httpGet('/:id')
+  public async getStoryBuId(request: Request): Promise<any> {
+    let res = await this.stories.getStoryById(Number(request.params['id']));
+    return Payload.getEmployeeById(res);
   }
 
   @httpGet('/propertynames')
   public async getPropertyNames(request: Request): Promise<any> {
-    let res = await this.storyProperties.getPropNames(request.query['property'], request.query['take'], );
+    let res = await this.storyProperties.getPropNames(request.query['property'], request.query['take']);
     return res.map((e) => Payload.getPropertyNames(e));
   }
 

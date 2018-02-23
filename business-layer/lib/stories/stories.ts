@@ -20,6 +20,7 @@ class Stories implements IStories {
             newStory.capacity = story.capacity;
             newStory.location = story.location;
             newStory.name = story.name;
+            newStory.description = story.description;
             newStory.price = story.price;
             newStory.time = story.time;
             newStory.status = Status.active;
@@ -60,6 +61,19 @@ class Stories implements IStories {
             .orderBy('name')
             .take(take)
             .getMany();
+    }
+
+    public async getStoryById(storyId: number): Promise<Story> {
+        let repo = await this.repo.getRepository(Story)
+        let db = await repo.createQueryBuilder('stories');
+        return db
+            .leftJoinAndSelect("stories.storyProperties", "properties")
+            .innerJoinAndSelect("properties.storyPropName", "storyPropName")
+            .select(["stories.name", "stories.storyId", "stories.description", "stories.location", "stories.time", "stories.capacity", "stories.price",
+                "properties.value", "properties.timestamp",
+                "storyPropName.propertyName"])
+            .where("stories.storyId = :storyId", { storyId: storyId })
+            .getOne();
     }
 }
 export { Stories };

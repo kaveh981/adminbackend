@@ -21,7 +21,8 @@ interface AppUserRegister {
 interface AddStory {
     creatorId: number,
     name: string,
-    location: string,
+    description: string,
+    location?: string,
     time: Date,
     capacity: number,
     price: number

@@ -15,6 +15,9 @@ export class Stories {
     @Column()
     name: string;
 
+    @Column({ nullable: true })
+    description: string;
+
     @Column()
     location: string;
 

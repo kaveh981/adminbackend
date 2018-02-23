@@ -1,4 +1,4 @@
-import { Employees, Users, StoryPropNames, Stories } from '../model-layer';
+import { Employees, Users, StoryPropNames, Stories, StoryProperties } from '../model-layer';
 
 export module Payload {
 
@@ -16,7 +16,7 @@ export module Payload {
 
     export function getStoryNames(e: Stories) {
         return {
-            property: e.name, propertyId: e.storyId
+            name: e.name, storyId: e.storyId
         }
     };
 
@@ -25,4 +25,13 @@ export module Payload {
             name: user.name, family: user.family, email: user.employee.email, employeeId: user.userId
         }
     };
-}
+
+    export function getEmployeeById(story: Stories) {
+        return {
+            storyId: story.storyId, name: story.name, description: story.description, location: story.location,
+            time: story.time, capacity: story.capacity, price: story.price, storyProperties: story.storyProperties.map(storyProperty => {
+                return { property: storyProperty.storyPropName.propertyName, value: storyProperty.value }
+            })
+        }
+    }
+
