@@ -28,20 +28,21 @@ export class StoryController {
 
   @httpGet('/')
   public async getStories(request: Request): Promise<any> {
+    console.log('hereeeeee')
     let res = await this.stories.getStories(request.query['story'], request.query['take']);
     return res.map((e) => Payload.getStoryNames(e));
-  }
-
-  @httpGet('/:id')
-  public async getStoryBuId(request: Request): Promise<any> {
-    let res = await this.stories.getStoryById(Number(request.params['id']));
-    return Payload.getEmployeeById(res);
   }
 
   @httpGet('/propertynames')
   public async getPropertyNames(request: Request): Promise<any> {
     let res = await this.storyProperties.getPropNames(request.query['property'], request.query['take']);
     return res.map((e) => Payload.getPropertyNames(e));
+  }
+
+  @httpGet('/:id')
+  public async getStoryBuId(request: Request): Promise<any> {
+    let res = await this.stories.getStoryById(Number(request.params['id']));
+    return Payload.getEmployeeById(res);
   }
 
 }
