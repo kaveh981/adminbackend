@@ -106,6 +106,7 @@ container.bind<express.RequestHandler>('generateRefreshToken').toConstantValue(m
 container.bind<express.RequestHandler>('validateRefreshToken').toConstantValue(middlewares.validateRefreshToken);
 container.bind<express.RequestHandler>('rejectToken').toConstantValue(middlewares.rejectToken);
 container.bind<express.RequestHandler>('respond').toConstantValue(middlewares.respond.auth);
+container.bind<express.RequestHandler>('appRespond').toConstantValue(middlewares.appRespond.user);
 container.bind<express.RequestHandler>('respondReject').toConstantValue(middlewares.respond.reject);
 container.bind<express.RequestHandler>('respondToken').toConstantValue(middlewares.respond.token);
 container.bind<express.RequestHandler>('verifyUser').toConstantValue(middlewares.verifyAppUser);
