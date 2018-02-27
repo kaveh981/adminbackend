@@ -42,11 +42,11 @@ class Middlewares {
             console.log('No authentication needed');
             return next();
         }
-        if (/(stories)/.test(req.originalUrl) || req.path === '/')
+        if (/(stories)/.test(req.originalUrl) || req.path === '/'){
             return next();
-        if (/(employees)/.test(req.originalUrl) || req.path === '/') {
-            console.log('No authentication needed');
-            return next();
+        // if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+        //     console.log('No authentication needed');
+        //     return next();
         } else {
             // const firebaseConfig = {
             //     apiKey: "AIzaSyAVREAUgG53zTYKUGUYI81IZPq5g-205DI",
@@ -65,6 +65,7 @@ class Middlewares {
 
             admin.auth().verifyIdToken(req.headers.authorization.toString())
                 .then(function (decodedToken) {
+                    console.log(decodedToken);
                     req.user = req.user || {};
                     req.user.appid = decodedToken.uid;
                     next();
@@ -159,7 +160,7 @@ class Middlewares {
     };
 
     public appRespond = {
-        auth: (req, res) => {
+        user: (req, res) => {
             res.status(200).json({
                 user: req.user
             });
