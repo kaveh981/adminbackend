@@ -6,6 +6,7 @@ import { container } from './container';
 import * as admin from 'firebase-admin';
 import { FirebaseConfig } from "./firebase-config";
 let cors = require('cors')
+let nodemon = require('nodemon');
 
 // create server
 let server = new InversifyExpressServer(container);
@@ -13,7 +14,7 @@ server.setConfig((app) => {
 
   // this is to allow cors
   app.use(cors());
- 
+
   app.use(container.get<express.RequestHandler>('verifyUser'));
   // add body parser
   app.use(bodyParser.urlencoded({
@@ -30,8 +31,9 @@ admin.initializeApp({
   databaseURL: 'https://chelpa-sms-verification.firebaseio.com'
 });
 
-console.log('new' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
-
+if (process.env.OPENSHIFT_NODEJS_IP) {
+  console.log('new ' + JSON.stringify(process.env.OPENSHIFT_NODEJS_IP));
+}
 
 if (process.env.PORT) {
   console.log('new ' + JSON.stringify(process.env.PORT));
@@ -46,11 +48,9 @@ let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 app.listen(port, ip);
 app.on('error', onError);
 app.get('/', function (req, res) {
-  res.send('Hello Kaveh!' + `, Server started on port ${port} and ip of ${ip} :)`);
+  res.send('Hello Kavehhhhh!' + `, Server started on port ${port} and ip of ${ip} :)`);
 });
 console.log(`Server started on port ${port} and ip of ${ip} :)`);
-
-
 
 app.set('port', port);
 function normalizePort(val) {
@@ -99,3 +99,25 @@ function onError(error) {
   }
 }
 
+
+
+process
+  // Handle normal exits
+  .on('exit', (code) => {
+    nodemon.emit('quit');
+    process.exit(code);
+  }) 
+
+  // Handle CTRL+C
+  .on('SIGINT', () => {
+    nodemon.emit('quit');
+    process.exit(0);
+  })
+
+  .on('unhandledRejection', (err) => {
+    console.log(err)
+  })
+
+  .on('uncaughtException', function(err) {
+  console.log('Caught exception: ' + err);
+});
