@@ -14,13 +14,22 @@ pipelines:
           - docker version
           - npm install
           - export IMAGE_NAME=kaveh981/shareit:$BITBUCKET_COMMIT
-          - echo "salam"
-          - echo $IMAGE_NAME
           # build the Docker image (this will use the Dockerfile in the root of the repo)
           - docker build -t $IMAGE_NAME .
           # authenticate with the Docker Hub registry
           - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
           # push the new Docker image to the Docker registry
           - docker push $IMAGE_NAME
+          # Download the necessary tools to deploy to AWS
+          - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+          - sudo apt-get install jq
+          - unzip awscli-bundle.zip
+          - ./awscli-bundle/install -b ~/bin/aws
+          - export PATH=~/bin:$PATH
+          # register the ECS task definition and capture the version
+          - export TASK_VERSION=$(aws ecs register-task-definition --family shareit-task --container-definitions "[{\"name\":\"shareit-container\",\"image\":\"$IMAGE_NAME\",\"cpu\":10,\"command\":[\"echo\",\"hello\"],\"memory\":10,\"essential\":true}]" | jq --raw-output '.taskDefinition.revision')
+          - echo $TASK_VERSION
+          # Update the ECS service to use the updated Task version
+          - aws ecs update-service --cluster shareit-cluster --service shareit-service --task-definition shareit-task:$TASK_VERSION
         services:
           - docker
