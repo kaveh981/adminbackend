@@ -4,7 +4,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: node:carbon
-
+image: xueshanf/awscli
 pipelines:
   default:
     - step:
@@ -20,12 +20,6 @@ pipelines:
           - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
           # push the new Docker image to the Docker registry
           - docker push $IMAGE_NAME
-          # Download the necessary tools to deploy to AWS
-          - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-          - apt-get install jq
-          - unzip awscli-bundle.zip
-          - ./awscli-bundle/install -b ~/bin/aws
-          - export PATH=~/bin:$PATH
           # register the ECS task definition and capture the version
           - export TASK_VERSION=$(aws ecs register-task-definition --family shareit-task --container-definitions "[{\"name\":\"shareit-container\",\"image\":\"$IMAGE_NAME\",\"cpu\":10,\"command\":[\"echo\",\"hello\"],\"memory\":10,\"essential\":true}]" | jq --raw-output '.taskDefinition.revision')
           - echo $TASK_VERSION
