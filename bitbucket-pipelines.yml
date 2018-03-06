@@ -22,6 +22,8 @@ pipelines:
           - docker push $IMAGE_NAME
           # Download the necessary tools to deploy to AWS
           - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+          - su -
+          - apt-get install sudo
           - sudo apt-get install jq
           - unzip awscli-bundle.zip
           - ./awscli-bundle/install -b ~/bin/aws
