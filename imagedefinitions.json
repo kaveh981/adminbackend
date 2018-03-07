@@ -1,0 +1,6 @@
+[
+    {
+        "name": "shareit-container",
+        "imageUri": "504696797004.dkr.ecr.us-east-2.amazonaws.com/shareit-container:latest"
+    }
+]
