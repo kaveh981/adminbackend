@@ -3,15 +3,14 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+options:
+  docker: true
 
 pipelines:
   default:
     - step:
-        caches:
-          - node
         script: # Modify the commands below to build your repository.
-          - docker version
+          # build and test the Node app
           - npm install
           - export IMAGE_NAME=kaveh981/shareit:$BITBUCKET_COMMIT
           # build the Docker image (this will use the Dockerfile in the root of the repo)
@@ -31,5 +30,3 @@ pipelines:
           - echo $TASK_VERSION
           # Update the ECS service to use the updated Task version
           - aws ecs update-service --cluster shareit-cluster --service shareit-service --task-definition shareit-task:$TASK_VERSION
-        services:
-          - docker
