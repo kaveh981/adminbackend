@@ -15,15 +15,13 @@ export class RoleController {
 
   @httpPost('/')
   public async addRole(request: Request): Promise<any> {
-    let role = new Role();
-    role.role = request.body['role'];
-    let res = await this._roles.addRole(role);
+    let res = await this._roles.addRole({ registererId: request['user'].id, role: request.body['role'] });
     return res;
   }
 
-  @httpGet('/')
-  public async get(): Promise<Role[]> {
-    let res = await this._roles.getRoles();
+  @httpGet('/employee/:id')
+  public async get(request: Request): Promise<EmployeeRoles[]> {
+    let res = await this._roles.getEmployeeRoles({ registererId: request['user'].id, employeeId: request.params['id'] });
     return res;
   }
 
@@ -34,7 +32,7 @@ export class RoleController {
   }
 
   @httpPut('/')
-  public async updateEmployee(request: Request): Promise<Role> {
+  public async updateRole(request: Request): Promise<Role> {
     let res = await this._roles.update(request.body);
     return res;
   }
