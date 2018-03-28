@@ -9,7 +9,7 @@ import {
     IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients,
     IAppUsers, AppUsers, IUsers, Users, IStoryProperties, StoryProperties, IStories, Stories
 } from './business-layer';
-import { IGenericRepository, GenericRepository } from './data-layer';
+import { IGenericRepository, GenericRepository, QueryBuilder } from './data-layer';
 import { EmployeeController, RoleController, controllerFactory, Middlewares, StoryController } from './lib/exporter';
 import * as express from 'express';
 
@@ -63,6 +63,17 @@ container.bind<any>('MysqlConfig').toConstantValue(
         synchronize: true
     }
 );
+
+container.bind<any>('KnexMysqlConfig').toConstantValue({
+    client: 'mysql',
+    connection: {
+        host: "mysql6.gear.host",
+        user: "mgmdb",
+        password: "Gp7uQ-?f414F",
+        database: "mgmdb",
+        port: 3306
+    }
+});
 // container.bind<any>('MysqlConfig').toConstantValue(
 //     {
 //         type: "mysql",
@@ -84,6 +95,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
 //     password: "FoZVWwwwot4GvkTTTeWvSsj0JUcVes1S",
 //     database: "yyrqujvq"
 // });
+container.bind<QueryBuilder>('QueryBuilder').to(QueryBuilder);
 
 container.bind<IEmployees>('Employees').to(Employees);
 container.bind<IAppUsers>('AppUsers').to(AppUsers);
@@ -109,7 +121,7 @@ container.bind<express.RequestHandler>('respond').toConstantValue(middlewares.re
 container.bind<express.RequestHandler>('appRespond').toConstantValue(middlewares.appRespond.user);
 container.bind<express.RequestHandler>('respondReject').toConstantValue(middlewares.respond.reject);
 container.bind<express.RequestHandler>('respondToken').toConstantValue(middlewares.respond.token);
-container.bind<express.RequestHandler>('verifyUser').toConstantValue(middlewares.verifyAppUser);
+container.bind<express.RequestHandler>('verifyUser').toConstantValue(middlewares.verifyUser);
 container.bind<any>('errorHandler').toConstantValue(middlewares.errorHandler);
 
 

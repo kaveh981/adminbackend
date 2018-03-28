@@ -1,0 +1,58 @@
+{
+     "cors": {
+        "enabled": true,
+        "priority": 10,
+        "module": {
+            "name": "cors"
+        }
+    },
+    "jsonParser": {
+        "enabled": true,
+        "priority": 20,
+        "module": {
+            "name": "body-parser",
+            "method": "json"
+        }
+    },
+    "urlEncoder": {
+        "enabled": true,
+        "priority": 30,
+        "route": "/",
+        "module": {
+            "name": "body-parser",
+            "method": "urlencoded",
+            "arguments": [
+                {
+                    "extended": true
+                }
+            ]
+        }
+    },
+       "routes": {
+        "enabled": true,
+        "priority": 40,
+        "module": {
+            "name": "body-parser",
+            "method": "urlencoded",
+            "arguments": [
+                {
+                    "extended": true
+                }
+            ]
+        }
+    },
+     "custom": {
+        "enabled": true,
+        "priority": 50,
+        "module": {
+            "name": "../build/lib/middleware",
+            "method": "errorHandler"
+        }
+    }
+}
+
+//   route: /api/v1
+//     module:
+//         name: mw:router
+//         arguments:
+//             - directory: path:src/controllers

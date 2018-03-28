@@ -3,7 +3,7 @@ import { injectable, inject, Container } from 'inversify';
 import * as express from 'express';
 import { Request, Response } from 'express';
 import { Employees as Employee, Users as User } from '../../../model-layer';
-import { IEmployees, ChangePassword } from '../../../business-layer';
+import { IEmployees } from '../../../business-layer';
 import { Payload } from '../../exporter';
 import { Strategy, ExtractJwt, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import * as passport from 'passport';
@@ -17,7 +17,7 @@ export function controllerFactory(container: Container) {
         private _employees: IEmployees;
         constructor( @inject('Employees') employees: IEmployees) {
             this._employees = employees;
-         //  membership.passportUse();
+            //  membership.passportUse();
         }
 
         @httpPost('/login',
@@ -30,7 +30,7 @@ export function controllerFactory(container: Container) {
             return response.send('login');
         }
 
-         @httpPost('/LoginApp',
+        @httpPost('/LoginApp',
             container.get<express.RequestHandler>('serializeAppUser'),
             container.get<express.RequestHandler>('serializeClient'),
             // container.get<express.RequestHandler>('generateToken'),

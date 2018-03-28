@@ -24,7 +24,7 @@ export class Employees {
     @TreeChildren({ cascadeInsert: true, cascadeUpdate: true })
     children: Employees[];
 
-    @TreeParent()
+    @TreeParent({ cascadeInsert: true, cascadeUpdate: true })
     parent: Employees;
 
     @TreeLevelColumn()
@@ -32,21 +32,20 @@ export class Employees {
 
     @OneToOne(type => Users, user => user.employee, {
         cascadeInsert: true,
-        cascadeUpdate: true,
-        cascadeRemove: true
+        cascadeUpdate: true
     })
     @JoinColumn()
     user: Users;
 
     @ManyToMany(type => Roles, role => role.employees,{
         cascadeInsert: true,
-        cascadeUpdate: true
+        cascadeUpdate: true,
     })
     employeesRoles: Roles[];
 
     @OneToMany(type => Clients, client => client.employee, {
         cascadeInsert: true,
-        cascadeUpdate: true
+        cascadeUpdate: true,
     })
     clients: Clients[];
 }

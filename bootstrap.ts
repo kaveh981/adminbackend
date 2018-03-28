@@ -5,26 +5,14 @@ import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-util
 import { container } from './container';
 import * as admin from 'firebase-admin';
 import { FirebaseConfig } from "./firebase-config";
+let config = require('shush')('../assets/middleware.json');
+let meddleware = require('meddleware');
 let cors = require('cors')
 let nodemon = require('nodemon');
 
 // create server
 let server = new InversifyExpressServer(container);
-server.setConfig((app) => {
 
-  // this is to allow cors
-  app.use(cors());
-
-  app.use(container.get<express.RequestHandler>('verifyUser'));
-  // add body parser
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }));
-  app.use(bodyParser.json());
-
-  app.use(container.get<any>('errorHandler'));
-
-});
 
 admin.initializeApp({
   credential: admin.credential.cert(FirebaseConfig),
@@ -39,14 +27,36 @@ if (process.env.PORT) {
   console.log('new ' + JSON.stringify(process.env.PORT));
 }
 
-let app = server.build();
+//let app = server.build();
 
 let port: number = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || '8080');
 let ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 // let port: number = normalizePort(process.env.PORT || '8080');
 // let ip = process.env.IP || '0.0.0.0';
-app.listen(port, ip);
-app.on('error', onError);
+// app.listen(port, ip);
+
+server.setConfig((app) => {
+  app.use(container.get<any>('errorHandler'));
+  app.use(cors());
+  // app.use(meddleware(config));
+  app.use(container.get<express.RequestHandler>('verifyUser'));
+  //add body parser
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
+}).setErrorConfig((app) => {
+  app.use((err: Error, req, res, next) => {
+    console.log(err.stack);
+    console.log(err.name);
+    console.log('message: ' + err.message);
+    res.status(500).send(err.message);
+  });
+});
+
+let app = server.build();
+app.listen(port, 'localhost');
+
 app.get('/', function (req, res) {
   res.send('Hello Kavehhhhh!' + `, Server started on port ${port} and ip of ${ip} :)`);
 });
@@ -69,13 +79,12 @@ function normalizePort(val) {
   return false;
 }
 
-
-
 /**
  * Event listener for HTTP server "error" event.
  */
 
 function onError(error) {
+  console.log('on errorrrrrr');
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -99,25 +108,24 @@ function onError(error) {
   }
 }
 
-
-
+app.on('error', onError)
+// Handle normal exits
 process
-  // Handle normal exits
   .on('exit', (code) => {
+    console.log('nodemon exit1');
     nodemon.emit('quit');
     process.exit(code);
-  }) 
+  })
 
   // Handle CTRL+C
   .on('SIGINT', () => {
+    console.log('nodemon exit2');
     nodemon.emit('quit');
     process.exit(0);
   })
 
   .on('unhandledRejection', (err) => {
-    console.log(err)
+    console.log('unhandledRejection ' + err)
   })
 
-  .on('uncaughtException', function(err) {
-  console.log('Caught exception: ' + err);
-});
+  .on('uncaughtException', onError);

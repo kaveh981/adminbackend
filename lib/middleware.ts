@@ -15,6 +15,9 @@ class Middlewares {
         @inject('Clients') private client: IClients, @inject('Secret') private secret) { }
 
     public verifyUser = (req, res, next) => {
+        // if(1===1){
+        //     return next();
+        // }
         if (/(mmmmm)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
@@ -24,32 +27,32 @@ class Middlewares {
             return next();
         } else {
             const jwt = require('jsonwebtoken');
-            console.log(req.headers);
             let u = jwt.verify(req.headers.authorization.toString().replace('bearer ', ''), this.secret, (error, user) => {
                 if (error) {
                     return next(error)
                 }
-                console.log('verified');
+
                 req.user = req.user || {};
                 req.user.id = user.id;
+                req.user.roles = user.roles;
                 next();
             })
         }
     }
 
     public verifyAppUser = (req, res, next) => {
-        if(1===1){
+        if (1 === 1) {
             return next();
         }
         if (/(membership)/.test(req.originalUrl) || req.path === '/') {
             console.log('No authentication needed');
             return next();
         }
-        if (/(stories)/.test(req.originalUrl) || req.path === '/'){
+        if (/(stories)/.test(req.originalUrl) || req.path === '/') {
             return next();
-        // if (/(employees)/.test(req.originalUrl) || req.path === '/') {
-        //     console.log('No authentication needed');
-        //     return next();
+            // if (/(employees)/.test(req.originalUrl) || req.path === '/') {
+            //     console.log('No authentication needed');
+            //     return next();
         } else {
             // const firebaseConfig = {
             //     apiKey: "AIzaSyAVREAUgG53zTYKUGUYI81IZPq5g-205DI",
@@ -67,8 +70,7 @@ class Middlewares {
             // });
 
             admin.auth().verifyIdToken(req.headers.authorization.toString())
-                .then(function (decodedToken) {
-                    console.log(decodedToken);
+                .then(decodedToken => {
                     req.user = req.user || {};
                     req.user.appid = decodedToken.uid;
                     next();
@@ -80,14 +82,34 @@ class Middlewares {
 
     public serializeUser = (req, res, next) => {
         let result = this.employee.authenticate(req.body['username'], req.body['password']);
-        result.then((user) => {
-            if (user.message) {
-                return next(user.message);
+        result.then(async (employee) => {
+            // create the first employee if there is no employee registred yet
+            if (employee.user === null) {
+                this.employee.addEmployee({
+                    email: req.body['username'],
+                    name: 'Kaveh',
+                    family: 'Fereidouni',
+                    password: req.body['password'],
+                    registererId: 0
+                }).then(user => {
+                    req.user = req.user || {};
+                    req['user']['userId'] = user.userId;
+                    req['user']['employeeId'] = user.employee.employeeId;
+                    return next();
+                }).catch(error => next(error))
+            } else {
+                if (employee.message) {
+                    console.log('nextMessage');
+                    return next(employee.message);
+                }
+                req.user = req.user || {};
+                req['user']['userId'] = employee.user.id;
+                req['user']['employeeId'] = employee.user.employeeId;
+                req['user']['roles'] = employee.user.roles;
+                next();
             }
-            req.user = req.user || {};
-            req['user']['userId'] = user.user.id;
-            next();
         }).catch(error => {
+            console.log(error);
             return next(error);
         })
     }
@@ -97,13 +119,13 @@ class Middlewares {
             appID: req.body['appID'], externalAppUserId: req.body['externalAppUserId'],
             phoneNumber: req.body['phoneNumber'], name: req.body['name']
         });
-        result.then((user) => {
-            console.log(user);
-            if (user.message) {
-                return next(user.message);
+        result.then((employee) => {
+            if (employee.message) {
+                return next(employee.message);
             }
             req.user = req.user || {};
-            req['user']['userId'] = user.user.id;
+            req['user']['userId'] = employee.id;
+            req['user']['employeeId'] = employee.employeeId;
             next();
         }).catch(error => {
             return next(error);
@@ -125,7 +147,9 @@ class Middlewares {
     public generateToken = (req, res, next) => {
         req.token = req.token || {};
         req['token']['accessToken'] = jwt.sign({
-            id: req['user']['userId']
+            id: req['user']['employeeId'],
+            userId: req['user']['userId'],
+            roles: req['user']['roles']
         }, this.secret, {
                 expiresIn: TOKENTIME
             });
@@ -197,8 +221,24 @@ class Middlewares {
     }
 
     public errorHandler = (error: Error, req, res, next) => {
-        console.error(error.message)
-        res.status(500).send(error.name + ' ' + error.message);
+        console.error('errrrrrrrrrrrrrrrrror middleware');
+        res.status(500).send(error.name + ' 99999999 ' + error.message);
     }
 }
 export { Middlewares };
+
+
+export function errorHandler(error: Error, req: express.Request, res: express.Response, next: Function): void {
+    /** Setup */
+    console.error('errrrrrrrrrrrrrrrrror middleware');
+
+    // res.status(500).send(error.name + ' 99999999 ' + error.message);
+}
+
+// function errorHandler(error: Error, req: express.Request, res: express.Response, next: Function): void {
+
+//     console.error('errrrrrrrrrrrrrrrrror middleware');
+//     res.status(500).send(error.name + ' 99999999 ' + error.message);
+// };
+
+// module.exports = () => { return errorHandler; };

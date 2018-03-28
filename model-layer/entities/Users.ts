@@ -18,7 +18,8 @@ export class Users {
 
     @OneToOne(type => Employees, employee => employee.user, {
         cascadeInsert: true,
-        cascadeUpdate: true
+        cascadeUpdate: true,
+        cascadeRemove: true
     })
     employee: Employees;
 

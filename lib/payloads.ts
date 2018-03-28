@@ -4,7 +4,7 @@ export module Payload {
 
     export function getEmployee(e: Employees) {
         return {
-            name: e.user.name, family: e.user.family, email: e.email, employeeId: e.user.userId
+            name: e.user.name, family: e.user.family, email: e.email, employeeId: e.employeeId
         }
     };
 
@@ -22,7 +22,7 @@ export module Payload {
 
     export function addEmployee(user: Users) {
         return {
-            name: user.name, family: user.family, email: user.employee.email, employeeId: user.userId
+            name: user.name, family: user.family, email: user.employee.email, employeeId: user.employee.employeeId
         }
     };
 
