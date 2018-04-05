@@ -7,3 +7,8 @@ interface AddRole {
     registererId: number,
     role: string
 }
+
+interface RoleForAutocomplete {
+    registererId: number,
+    role: string
+}

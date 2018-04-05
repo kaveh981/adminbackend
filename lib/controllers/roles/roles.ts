@@ -31,6 +31,22 @@ export class RoleController {
     return res
   }
 
+  @httpGet('/autocomplete')
+  public async getRolesForAutocomplete(request: Request): Promise<any> {
+    return await this._roles.getRoleByName(request.query['role'], request.query['take']);
+  }
+
+  @httpGet('/')
+  public async getRoles(request: Request): Promise<any> {
+    let pagination: Pagination = {
+      skip: request.query['skip'],
+      take: request.query['take'],
+      sort: request.query['sortBy'],
+      order: request.query['orderBy']
+    };
+    return await this._roles.getAllRoles(pagination);
+  }
+
   @httpPut('/')
   public async updateRole(request: Request): Promise<Role> {
     let res = await this._roles.update(request.body);

@@ -51,12 +51,12 @@ class Roles implements IRoles {
                 }
                 await this.repo.save(employee);
                 return { success: true, message: 'done' };
-            } else if(!employee){
-                 return { success: false, message: `employee isn't a descendant of the current employee` };
-            } else if(!role){
-                 return { success: false, message: `Role isn't among the currenty employee roles` };
+            } else if (!employee) {
+                return { success: false, message: `employee isn't a descendant of the current employee` };
+            } else if (!role) {
+                return { success: false, message: `Role isn't among the currenty employee roles` };
             } else {
-                 return { success: false, message: `Something wrong` };
+                return { success: false, message: `Something wrong` };
             }
         }
         catch (error) {
@@ -122,6 +122,39 @@ class Roles implements IRoles {
         });
         await this.repo.remove([result]);
         return result;
+    }
+
+    public async getRoleByName(role: string, take: number): Promise<RoleForAutocomplete[]> {
+        let repo = await this.repo.getRepository(Role)
+        let db = await repo.createQueryBuilder('roles');
+        return db.select('roles.role', 'roles.roleId')
+            .where(`roles.role LIKE '%${role}%'`)
+            .orderBy('roles.role')
+            .take(take)
+            .getMany();
+    }
+
+    // public async getAllRoles(pagination: Pagination): Promise<RoleForAutocomplete[]> {
+    //     let repo = await this.repo.getRepository(Role)
+    //     let db = await repo.createQueryBuilder('roles');
+    //     return db.select('roles.role', 'roles.roleId')
+    //         .orderBy('roles.role')
+    //         .take(take)
+    //         .getMany();
+    // }
+ public async getAllRoles(pagination: Pagination): Promise<RoleForAutocomplete[]> {
+         let repo = await this.repo.getRepository(Role)
+        if (pagination) {
+            return await repo.createQueryBuilder('roles')
+                .orderBy(pagination.sort, pagination.order)
+                .skip(pagination.skip)
+                .take(pagination.take)
+                .getMany();
+        }
+        else {
+            return await repo.createQueryBuilder('roles')
+                .getMany();
+        }
     }
 }
 export { Roles };

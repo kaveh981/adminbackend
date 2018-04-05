@@ -17,7 +17,6 @@ export class EmployeeController {
 
   @httpPost('/')
   public async addEmployee(request: Request): Promise<any> {
-    console.log(request['user']);
     let res = await this._employees.addEmployee({
       family: request.body['family'],
       name: request.body['name'],

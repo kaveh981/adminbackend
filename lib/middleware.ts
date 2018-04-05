@@ -1,20 +1,25 @@
-import { IEmployees, IClients, IAppUsers } from '../business-layer';
+import { IEmployees, IClients, IAppUsers, IRoutes } from '../business-layer';
 import { Users, Employees, AppUsers } from '../model-layer';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as admin from 'firebase-admin';
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+let UrlPattern = require('url-pattern');
 
 const TOKENTIME = 120 * 60; // in seconds
 
 @injectable()
 class Middlewares {
 
-    constructor( @inject('Employees') private employee: IEmployees, @inject('AppUsers') private appUser: IAppUsers,
-        @inject('Clients') private client: IClients, @inject('Secret') private secret) { }
+    constructor( @inject('Employees') private employee: IEmployees,
+        @inject('Routes') private route: IRoutes,
+        @inject('AppUsers') private appUser: IAppUsers,
+        @inject('Clients') private client: IClients,
+        @inject('Secret') private secret) {
+    }
 
-    public verifyUser = (req, res, next) => {
+    public verifyUser = (req: express.Request, res, next) => {
         // if(1===1){
         //     return next();
         // }
@@ -27,15 +32,33 @@ class Middlewares {
             return next();
         } else {
             const jwt = require('jsonwebtoken');
-            let u = jwt.verify(req.headers.authorization.toString().replace('bearer ', ''), this.secret, (error, user) => {
+            let u = jwt.verify(req.headers.authorization.toString().replace('bearer ', ''), this.secret, async (error, user) => {
                 if (error) {
                     return next(error)
                 }
-
-                req.user = req.user || {};
-                req.user.id = user.id;
-                req.user.roles = user.roles;
-                next();
+                let fs = require('fs');
+                fs.readFile('myjsonfile.json', 'utf8', (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        next(err);
+                    } else {
+                        let obj = JSON.parse(data); //now it an object
+                        let matchedObject = obj[this.getMethodNumber(req.method)].find(o => {
+                            console.log(o.url);
+                            return new UrlPattern(o.url).match(req.url)
+                        });
+                        if (matchedObject) {
+                            req['user'] = req['user'] || {};
+                            req['user'].id = user.id;
+                            req['user'].roles = user.roles;
+                            next();
+                        }
+                        else {
+                            console.log('no role');
+                            next(`You don't have the permisson to access this route`)
+                        }
+                    }
+                });
             })
         }
     }
@@ -223,6 +246,27 @@ class Middlewares {
     public errorHandler = (error: Error, req, res, next) => {
         console.error('errrrrrrrrrrrrrrrrror middleware');
         res.status(500).send(error.name + ' 99999999 ' + error.message);
+    }
+
+    getMethodNumber(method) {
+        let mn = 0;
+        switch (method.toLowerCase()) {
+            case 'post':
+                mn = Method.post;
+                break;
+            case 'get':
+                mn = Method.get;
+                break;
+            case 'put':
+                mn = Method.put;
+                break;
+            case 'delete':
+                mn = Method.delete;
+                break;
+            default:
+                mn = 0;
+        }
+        return mn;
     }
 }
 export { Middlewares };
