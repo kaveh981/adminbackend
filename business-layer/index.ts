@@ -15,3 +15,6 @@ export * from './lib/users/users.infc';
 export * from './lib/users/users';
 export * from './lib/story-properties/story-properties.infc';
 export * from './lib/story-properties/story-properties';
+export * from './lib/product-categories/product-categories';
+export * from './lib/product-categories/product-categories.infc';
+

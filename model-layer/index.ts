@@ -9,3 +9,4 @@ export * from './entities/AppUsers';
 export * from './entities/StoryProperties';
 export * from './entities/StoryPropNames';
 export * from './entities/Routes';
+export * from './entities/ProductCategories';

@@ -44,7 +44,6 @@ class Middlewares {
                     } else {
                         let obj = JSON.parse(data); //now it an object
                         let matchedObject = obj[this.getMethodNumber(req.method)].find(o => {
-                            console.log(o.url);
                             return new UrlPattern(o.url).match(req.url)
                         });
                         if (matchedObject) {

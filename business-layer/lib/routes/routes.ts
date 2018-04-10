@@ -90,6 +90,7 @@ class Routes implements IRoutes {
         }
     }
 
+    //obsolete
     async getRoleForRoute(route, method: Method): Promise<string> {
         let repo = await this.repo.getRepository(Route)
         let result = await repo.createQueryBuilder('routes')
@@ -98,23 +99,26 @@ class Routes implements IRoutes {
             .where(`routes.route = :route`, { route: route })
             .andWhere(`routes.method = :method`, { method: method })
             .getOne();
-        console.log(result);
-        return 'employee'
-        // return result.role.role;
+        return result.role.role;
     }
 
-    public async  update(route: UpdateRoute): Promise<Route> {
-        console.log(route);
-        let repo = await this.repo.getRepository(Route)
-        let result = await repo.createQueryBuilder('routes')
-            .leftJoinAndSelect("routes.role", "role")
-            .where("routes.routeId = :routeId", { routeId: route.routeId })
-            .getOne();
-        result.route = route.route;
-        result.method = route.method;
-        result.role.roleId = route.roleId;
-        await this.repo.save(result);
-        return result;
+    public async  update(route: UpdateRoute): Promise<ReturnStatus> {
+        try {
+            let repo = await this.repo.getRepository(Route)
+            let result = await repo.createQueryBuilder('routes')
+                .leftJoinAndSelect("routes.role", "role")
+                .where("routes.routeId = :routeId", { routeId: route.routeId })
+                .getOne();
+            result.route = route.route;
+            result.method = route.method;
+            result.role.roleId = route.roleId;
+            await this.repo.save(result);
+            await this.writeJson();
+            return { success: true, message: `Deleted` };
+        }
+        catch (error) {
+            return { success: false, message: error.message };
+        }
     }
 
     public async  removeById(id: number): Promise<ReturnStatus> {

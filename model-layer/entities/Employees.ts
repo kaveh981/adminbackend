@@ -5,6 +5,7 @@ import {
 import { Users } from "./Users";
 import { Roles } from './Roles';
 import { Clients } from './Clients';
+import { ProductCategories } from './ProductCategories';
 
 @ClosureEntity()
 export class Employees {
@@ -37,7 +38,7 @@ export class Employees {
     @JoinColumn()
     user: Users;
 
-    @ManyToMany(type => Roles, role => role.employees,{
+    @ManyToMany(type => Roles, role => role.employees, {
         cascadeInsert: true,
         cascadeUpdate: true,
     })
@@ -48,4 +49,10 @@ export class Employees {
         cascadeUpdate: true,
     })
     clients: Clients[];
+
+    @OneToMany(type => ProductCategories, productCategories => productCategories.creator, {
+        cascadeInsert: true,
+        cascadeUpdate: true
+    })
+    productCategories: ProductCategories[];
 }

@@ -32,15 +32,13 @@ export class RouteController {
   }
 
   @httpPut('/')
-  public async updateRoute(request: Request): Promise<Route> {
-    let res = await this.routes.update(request.body);
-    return res;
+  public async updateRoute(request: Request): Promise<ReturnStatus> {
+    return await this.routes.update(request.body);
   }
 
   @httpDelete('/:id')
   public async deleteRole(request: Request): Promise<ReturnStatus> {
-    let res = await this.routes.removeById(request.params['id']);
-    return res;
+    return await this.routes.removeById(request.params['id']);
   }
 
 }

@@ -3,15 +3,19 @@ import { Container } from 'inversify';
 import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import {
     Users as User, Roles as Role, Employees as Employee, Category, Clients as Client,
-    AppUsers as AppUser, Stories as Story, StoryCategories, StoryPropNames, StoryProperties as StoryProperty,Routes as Route
+    AppUsers as AppUser, Stories as Story, StoryCategories, StoryPropNames,
+    StoryProperties as StoryProperty, Routes as Route, ProductCategories as ProductCategory
 } from './model-layer';
 import {
     IEmployees, Employees, IRoles, Roles, BusinessLayerHelper, IClients, Clients,
     IAppUsers, AppUsers, IUsers, Users, IStoryProperties, StoryProperties, IStories, Stories,
-    IRoutes,Routes
+    IRoutes, Routes, ProductCategories, IProductCategories
 } from './business-layer';
 import { IGenericRepository, GenericRepository, QueryBuilder } from './data-layer';
-import { EmployeeController, RoleController, controllerFactory, Middlewares, StoryController,RouteController } from './lib/exporter';
+import {
+    EmployeeController, RoleController, controllerFactory, Middlewares, StoryController,
+    RouteController, ProductController
+} from './lib/exporter';
 import * as express from 'express';
 
 let container = new Container();
@@ -59,7 +63,7 @@ container.bind<any>('MysqlConfig').toConstantValue(
 
         entities: [
             User, Role, Employee, Category, Client, StoryCategories, Story,
-            AppUser, StoryPropNames, StoryProperty, Route
+            AppUser, StoryPropNames, StoryProperty, Route, ProductCategory
         ],
         synchronize: true
     }
@@ -107,6 +111,7 @@ container.bind<IRoles>('Roles').to(Roles);
 container.bind<BusinessLayerHelper>('BusinessLayerHelper').to(BusinessLayerHelper);
 container.bind<IClients>('Clients').to(Clients);
 container.bind<IRoutes>('Routes').to(Routes);
+container.bind<IProductCategories>('ProductCategories').to(ProductCategories);
 
 container.bind<string>('Secret').toConstantValue('mgm secret key');
 
@@ -134,6 +139,7 @@ container.bind<interfaces.Controller>(TYPE.Controller).to(StoryController).whenT
 container.bind<interfaces.Controller>(TYPE.Controller).to(EmployeeController).whenTargetNamed('EmployeeController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(RoleController).whenTargetNamed('RoleController');
 container.bind<interfaces.Controller>(TYPE.Controller).to(RouteController).whenTargetNamed('RouteController');
+container.bind<interfaces.Controller>(TYPE.Controller).to(ProductController).whenTargetNamed('ProductController');
 
 //container.get<IGenericRepository<any>>('GenericRepository').init();
 

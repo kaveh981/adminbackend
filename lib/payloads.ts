@@ -8,6 +8,12 @@ export module Payload {
         }
     };
 
+    export function getProductCategories(e: any) {
+        return {
+            name: e.name, id: e.id, hasChildren: e.hasChildren
+        }
+    };
+
     export function getPropertyNames(e: StoryPropNames) {
         return {
             property: e.propertyName, propertyId: e.propertyNameId
